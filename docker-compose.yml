@@ -1,0 +1,21 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: kira-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: kira
+      POSTGRES_PASSWORD: kira_dev_pw
+      POSTGRES_DB: kira
+    ports:
+      - "5432:5432"
+    volumes:
+      - kira_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U kira -d kira"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  kira_pgdata:

@@ -1,0 +1,78 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    color-scheme: dark;
+  }
+
+  html, body, #root {
+    height: 100%;
+    background: #0a1410;
+  }
+
+  body {
+    @apply font-body text-white antialiased;
+    background:
+      radial-gradient(1200px 600px at 20% -10%, rgba(122, 173, 138, 0.10), transparent 60%),
+      radial-gradient(900px 500px at 100% 100%, rgba(255, 107, 53, 0.06), transparent 60%),
+      #0a1410;
+    background-attachment: fixed;
+  }
+
+  ::selection {
+    background: rgba(255, 107, 53, 0.35);
+    color: #fff;
+  }
+
+  /* Scrollbars */
+  ::-webkit-scrollbar { width: 10px; height: 10px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb {
+    background: rgba(122, 173, 138, 0.18);
+    border-radius: 10px;
+  }
+  ::-webkit-scrollbar-thumb:hover { background: rgba(122, 173, 138, 0.35); }
+}
+
+@layer components {
+  .glass {
+    background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02));
+    border: 1px solid rgba(122, 173, 138, 0.12);
+    backdrop-filter: blur(8px);
+  }
+
+  .card-ink {
+    @apply bg-ink-700/70 border border-mint-300/10 rounded-2xl shadow-card;
+  }
+
+  .input-ink {
+    @apply w-full bg-ink-800/80 border border-mint-300/15 rounded-xl px-4 py-3
+           text-white placeholder:text-muted-fg/60
+           focus:outline-none focus:ring-2 focus:ring-mint-300/40 focus:border-mint-300/40
+           transition;
+  }
+
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 bg-ember-500 hover:bg-ember-600
+           text-white font-medium px-5 py-3 rounded-xl shadow-ember
+           transition active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  .btn-mint {
+    @apply inline-flex items-center justify-center gap-2 bg-mint-500 hover:bg-mint-600
+           text-white font-medium px-5 py-3 rounded-xl shadow-card
+           transition active:scale-[0.98] disabled:opacity-50;
+  }
+
+  .btn-ghost {
+    @apply inline-flex items-center justify-center gap-2 bg-transparent
+           border border-mint-300/25 hover:border-mint-300/50 hover:bg-mint-300/5
+           text-white font-medium px-5 py-3 rounded-xl transition active:scale-[0.98];
+  }
+
+  .pill {
+    @apply inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono uppercase tracking-wide;
+  }
+}
