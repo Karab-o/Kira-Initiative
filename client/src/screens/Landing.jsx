@@ -2,156 +2,199 @@ import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import {
   ShieldCheck, MessageCircle, Camera, Stethoscope,
-  Inbox, NotebookPen, CalendarDays, ArrowRight,
+  Lock, ArrowRight, UserRound, Briefcase,
+  Inbox, NotebookPen, CalendarDays,
 } from 'lucide-react';
-import Badge from '../components/ui/Badge.jsx';
-
-const PATIENT_FEATURES = [
-  { icon: MessageCircle, label: 'Anonymous AI chat' },
-  { icon: Camera, label: 'Photo symptom scan' },
-  { icon: Stethoscope, label: 'Connect with a real doctor' },
-];
-
-const DOCTOR_FEATURES = [
-  { icon: Inbox, label: 'Triaged case queue' },
-  { icon: NotebookPen, label: 'SOAP notes + private notes' },
-  { icon: CalendarDays, label: 'Appointments & prescriptions' },
-];
 
 export default function Landing() {
   const navigate = useNavigate();
 
   return (
-    <div className="min-h-screen bg-ink-950 text-white flex flex-col">
-      {/* Top brand */}
-      <header className="px-6 md:px-10 py-6 flex items-center justify-between">
-        <div className="flex items-center gap-2.5">
-          <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-mint-300 to-mint-500 flex items-center justify-center">
-            <svg viewBox="0 0 32 32" className="w-5 h-5" fill="none">
-              <path d="M11 8v16M11 16l8-8M11 16l8 8" stroke="white" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
-          </div>
+    <div className="min-h-screen bg-cream flex flex-col">
+      {/* ── Header ───────────────────────────────────────────── */}
+      <header className="px-6 md:px-10 py-5 flex items-center justify-between border-b border-[#EDE7E3]">
+        <div className="flex items-center gap-3">
+          <KiraLogo />
           <div>
-            <p className="font-display text-lg leading-tight">Kira Initiative</p>
-            <p className="text-[10px] font-mono uppercase tracking-wider text-muted-fg">Private men's health · Rwanda</p>
+            <p className="font-display font-bold text-[17px] text-coal leading-tight">
+              Kira Initiative
+            </p>
+            <p className="text-[11px] text-coal-muted tracking-wide">
+              Private health · Rwanda
+            </p>
           </div>
         </div>
-        <Badge tone="mint" dot>One platform</Badge>
+        <div className="hidden md:flex items-center gap-1.5 text-[12px] text-coal-muted px-3 py-1.5 rounded-full bg-sage-50 border border-sage-100">
+          <ShieldCheck size={12} className="text-sage-500" />
+          Anonymous-first
+        </div>
       </header>
 
-      {/* Hero */}
-      <section className="flex-1 flex items-center justify-center px-6 md:px-10 py-6">
-        <div className="w-full max-w-5xl">
+      {/* ── Main ─────────────────────────────────────────────── */}
+      <main className="flex-1 flex items-center justify-center px-5 md:px-10 py-10 md:py-14">
+        <div className="w-full max-w-4xl">
+
+          {/* Hero */}
           <motion.div
-            initial={{ opacity: 0, y: 12 }}
+            initial={{ opacity: 0, y: 14 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
-            className="text-center mb-10 md:mb-14"
+            className="text-center mb-10 md:mb-12"
           >
-            <h1 className="font-display text-4xl md:text-6xl leading-[1.05] mb-4 max-w-3xl mx-auto">
-              Private support when you need it most.
+            <h1 className="font-display font-bold text-4xl md:text-5xl text-coal leading-[1.1] mb-3">
+              Private support when you<br className="hidden md:block" /> need it most.
             </h1>
-            <p className="text-muted-fg text-base md:text-lg max-w-xl mx-auto leading-relaxed">
+            <p className="text-coal-muted text-base md:text-lg max-w-sm mx-auto leading-relaxed">
               How would you like to continue?
             </p>
           </motion.div>
 
-          {/* Two-up role picker */}
-          <div className="grid md:grid-cols-2 gap-4 md:gap-6">
-            <RoleCard
-              variant="patient"
-              title="I'm here for myself"
-              description="Anonymous chat with Kira. No account. No history. No judgment."
-              features={PATIENT_FEATURES}
-              ctaText="Continue as patient"
-              onClick={() => navigate('/patient')}
-              delay={0.1}
-            />
-            <RoleCard
-              variant="doctor"
-              title="I'm a clinician"
-              description="Sign in to the clinical portal to pick up escalated cases."
-              features={DOCTOR_FEATURES}
-              ctaText="Continue as doctor"
-              onClick={() => navigate('/doctor/login')}
-              delay={0.2}
-            />
+          {/* Split cards */}
+          <div className="grid md:grid-cols-2 gap-4 md:gap-5">
+
+            {/* Patient card */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.1 }}
+              className="card p-6 md:p-8 flex flex-col"
+            >
+              <div className="flex items-center gap-3 mb-5">
+                <div className="w-10 h-10 rounded-xl bg-sage-100 flex items-center justify-center flex-shrink-0">
+                  <UserRound size={18} className="text-sage-500" />
+                </div>
+                <div>
+                  <p className="font-semibold text-coal text-[15px]">I'm here for myself</p>
+                  <p className="text-[12px] text-coal-muted">Patient · User</p>
+                </div>
+              </div>
+
+              <p className="text-[14px] text-coal-muted mb-6 leading-relaxed">
+                Get anonymous AI guidance for emotional and sexual health. No account needed — your privacy is guaranteed.
+              </p>
+
+              <ul className="space-y-2.5 mb-7">
+                <FeatureRow icon={Lock} label="No account · No history · No judgment" />
+                <FeatureRow icon={MessageCircle} label="Anonymous AI chat with Kira" />
+                <FeatureRow icon={Stethoscope} label="Escalate to a verified doctor when needed" />
+              </ul>
+
+              <div className="mt-auto space-y-2.5">
+                <button
+                  onClick={() => navigate('/patient')}
+                  className="w-full btn-primary"
+                >
+                  Continue anonymously
+                  <ArrowRight size={16} />
+                </button>
+                <div className="grid grid-cols-2 gap-2">
+                  <button
+                    onClick={() => navigate('/patient/login')}
+                    className="btn-ghost !py-2.5 text-[14px]"
+                  >
+                    Login
+                  </button>
+                  <button
+                    onClick={() => navigate('/patient/signup')}
+                    className="btn-ghost !py-2.5 text-[14px]"
+                  >
+                    Sign up
+                  </button>
+                </div>
+              </div>
+            </motion.div>
+
+            {/* Doctor card */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+              className="card p-6 md:p-8 flex flex-col border-sage-200/60 bg-sage-50/40"
+            >
+              <div className="flex items-center gap-3 mb-5">
+                <div className="w-10 h-10 rounded-xl bg-sage-500/10 flex items-center justify-center flex-shrink-0">
+                  <Briefcase size={18} className="text-sage-500" />
+                </div>
+                <div>
+                  <p className="font-semibold text-coal text-[15px]">I'm a clinician</p>
+                  <p className="text-[12px] text-coal-muted">Doctor · Healthcare provider</p>
+                </div>
+              </div>
+
+              <p className="text-[14px] text-coal-muted mb-6 leading-relaxed">
+                Access the clinical portal to review escalated cases, manage consultations, and prescribe care.
+              </p>
+
+              <ul className="space-y-2.5 mb-7">
+                <FeatureRow icon={Inbox} label="Triaged case queue with risk levels" variant="sage" />
+                <FeatureRow icon={NotebookPen} label="AI summaries — never raw chat logs" variant="sage" />
+                <FeatureRow icon={CalendarDays} label="Secure messaging, prescriptions & appointments" variant="sage" />
+              </ul>
+
+              <div className="mt-auto space-y-2.5">
+                <button
+                  onClick={() => navigate('/doctor/login')}
+                  className="w-full btn-primary"
+                >
+                  Doctor login
+                  <ArrowRight size={16} />
+                </button>
+                <button
+                  onClick={() => navigate('/doctor/signup')}
+                  className="w-full btn-ghost text-[14px]"
+                >
+                  Medical verification &amp; signup
+                </button>
+              </div>
+            </motion.div>
           </div>
 
-          {/* Privacy reassurance */}
-          <motion.div
+          {/* Privacy note */}
+          <motion.p
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ delay: 0.4 }}
-            className="mt-10 flex items-center justify-center gap-2 text-xs text-muted-fg"
+            transition={{ delay: 0.5 }}
+            className="mt-8 flex items-center justify-center gap-2 text-[12px] text-coal-muted"
           >
-            <ShieldCheck size={14} className="text-mint-300" />
-            <span>Patient chats are never shared with doctors — only a structured summary is.</span>
-          </motion.div>
+            <ShieldCheck size={13} className="text-sage-500 flex-shrink-0" />
+            Patient chats are never shared with doctors — only a structured AI summary is.
+          </motion.p>
         </div>
-      </section>
+      </main>
 
-      <footer className="px-6 md:px-10 py-5 text-center text-[11px] text-muted-fg font-mono uppercase tracking-wider">
-        © Kira Initiative · Built for men in Rwanda
+      {/* ── Footer ───────────────────────────────────────────── */}
+      <footer className="px-6 py-4 border-t border-[#EDE7E3] text-center text-[11px] text-coal-subtle">
+        © 2025 Kira Initiative · Built for men in Rwanda · All sessions are encrypted end-to-end
       </footer>
     </div>
   );
 }
 
-function RoleCard({ variant, title, description, features, ctaText, onClick, delay }) {
-  const isPatient = variant === 'patient';
-
+function KiraLogo() {
   return (
-    <motion.button
-      onClick={onClick}
-      initial={{ opacity: 0, y: 16 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5, delay }}
-      whileHover={{ y: -3 }}
-      className={`group text-left card-ink !p-6 md:!p-8 relative overflow-hidden transition-all
-        ${isPatient
-          ? 'hover:border-ember-400/40 hover:shadow-ember'
-          : 'hover:border-mint-300/40 hover:shadow-glow'
-        }`}
-    >
-      {/* Decorative glow */}
-      <div className={`absolute -top-20 -right-20 w-48 h-48 rounded-full blur-3xl pointer-events-none transition-opacity
-        ${isPatient
-          ? 'bg-ember-500/15 group-hover:bg-ember-500/25'
-          : 'bg-mint-300/15 group-hover:bg-mint-300/25'
-        }`} />
+    <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-sage-300 to-sage-500 flex items-center justify-center shadow-green flex-shrink-0">
+      <svg viewBox="0 0 32 32" className="w-5 h-5" fill="none">
+        <path
+          d="M11 8v16M11 16l8-8M11 16l8 8"
+          stroke="white"
+          strokeWidth="3"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+      </svg>
+    </div>
+  );
+}
 
-      <div className="relative">
-        <div className="flex items-center gap-2 mb-5">
-          <Badge tone={isPatient ? 'ember' : 'mint'} dot>
-            {isPatient ? 'Patient' : 'Doctor'}
-          </Badge>
-        </div>
-
-        <h2 className="font-display text-2xl md:text-3xl text-white mb-2 leading-tight">{title}</h2>
-        <p className="text-sm text-muted-fg leading-relaxed mb-6">{description}</p>
-
-        <ul className="space-y-2.5 mb-7">
-          {features.map((f) => (
-            <li key={f.label} className="flex items-center gap-2.5 text-sm text-white/90">
-              <div className={`w-7 h-7 rounded-lg flex items-center justify-center border
-                ${isPatient
-                  ? 'bg-ember-500/10 border-ember-400/25 text-ember-400'
-                  : 'bg-mint-300/10 border-mint-300/25 text-mint-300'
-                }`}>
-                <f.icon size={14} />
-              </div>
-              {f.label}
-            </li>
-          ))}
-        </ul>
-
-        <div className={`inline-flex items-center gap-2 font-medium text-sm transition
-          ${isPatient ? 'text-ember-400 group-hover:text-ember-500' : 'text-mint-200 group-hover:text-mint-100'}`}>
-          {ctaText}
-          <ArrowRight size={16} className="transition-transform group-hover:translate-x-1" />
-        </div>
+function FeatureRow({ icon: Icon, label, variant = 'default' }) {
+  const iconBg  = variant === 'sage' ? 'bg-sage-100' : 'bg-sage-50';
+  const iconCol = 'text-sage-500';
+  return (
+    <li className="flex items-center gap-2.5 text-[14px] text-coal-light">
+      <div className={`w-6 h-6 rounded-md ${iconBg} flex items-center justify-center flex-shrink-0`}>
+        <Icon size={12} className={iconCol} />
       </div>
-    </motion.button>
+      {label}
+    </li>
   );
 }

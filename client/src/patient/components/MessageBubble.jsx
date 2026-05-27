@@ -14,15 +14,15 @@ export default function MessageBubble({ message }) {
       <div className={cn('max-w-[82%] flex flex-col gap-2', isUser ? 'items-end' : 'items-start')}>
         <div
           className={cn(
-            'px-4 py-3 text-sm leading-relaxed whitespace-pre-wrap',
+            'px-4 py-3 text-[14px] leading-relaxed whitespace-pre-wrap',
             isUser
-              ? 'bg-mint-500 text-white rounded-2xl rounded-br-sm'
-              : 'bg-ink-700 text-white border border-mint-300/10 rounded-2xl rounded-bl-sm',
+              ? 'bg-sage-500 text-white rounded-2xl rounded-br-sm'
+              : 'bg-white text-coal border border-[#E5DDD7] rounded-2xl rounded-bl-sm shadow-soft',
           )}
         >
           {message.content}
           {message.streaming && (
-            <span className="inline-block w-[2px] h-[1em] ml-0.5 align-[-2px] bg-mint-300 animate-pulse" />
+            <span className="inline-block w-[2px] h-[1em] ml-0.5 align-[-2px] bg-sage-400 animate-pulse" />
           )}
         </div>
         {!isUser && message.careBadge && (

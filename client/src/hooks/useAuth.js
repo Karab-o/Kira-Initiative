@@ -5,17 +5,27 @@ import { useDoctorStore } from '../stores/doctorStore.js';
 export function useAuth() {
   const store = useDoctorStore();
 
-  const login = useCallback(async ({ email, password, twoFAToken }) => {
-    const { data } = await api.post('/auth/login', { email, password, twoFAToken });
-    store.login({ token: data.token, doctor: data.doctor });
+  const login = useCallback(async ({ email, medicalId, password, twoFAToken, accessCode, ...rest }) => {
+    const { data } = await api.post('/auth/login', {
+      email,
+      medicalId,
+      password,
+      twoFAToken,
+      accessCode,
+    });
+    if (data.token && data.doctor) {
+      store.login({ token: data.token, doctor: data.doctor });
+    }
     return data;
   }, [store]);
 
   const signup = useCallback(async (formData) => {
-    // formData is FormData (license file + fields)
-    const { data } = await api.post('/auth/signup', formData, {
-      headers: { 'Content-Type': 'multipart/form-data' },
-    });
+    const { data } = await api.post('/auth/signup', formData);
+    return data;
+  }, []);
+
+  const validateCode = useCallback(async (code) => {
+    const { data } = await api.post('/auth/validate-code', { code });
     return data;
   }, []);
 
@@ -41,6 +51,7 @@ export function useAuth() {
     isAuthenticated: store.isAuthenticated,
     login,
     signup,
+    validateCode,
     logout,
     refresh,
     apiError,

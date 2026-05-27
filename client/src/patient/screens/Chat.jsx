@@ -17,10 +17,10 @@ const PROMPTS = [
 
 export default function Chat() {
   const navigate = useNavigate();
-  const session = useSession();
-  const [text, setText] = useState('');
+  const session  = useSession();
+  const [text, setText]               = useState('');
   const [showDoctorCta, setShowDoctorCta] = useState(false);
-  const scrollRef = useRef(null);
+  const scrollRef  = useRef(null);
   const scanLocked = useSessionStore((s) => s.scanLocked);
 
   useEffect(() => {
@@ -48,20 +48,24 @@ export default function Chat() {
 
   return (
     <MobileFrame>
-      {/* Header */}
-      <header className="px-5 py-4 border-b border-mint-300/10 flex items-center justify-between gap-3">
-        <button onClick={() => navigate('/patient/home')} className="text-muted-fg hover:text-white transition">
+      {/* ── Header ─────────────────────────────────────────── */}
+      <header className="px-5 py-4 border-b border-[#E5DDD7] flex items-center justify-between gap-3 bg-white">
+        <button
+          onClick={() => navigate('/patient/home')}
+          className="text-coal-muted hover:text-coal transition p-1 -ml-1 rounded-lg hover:bg-sage-50"
+          aria-label="Back"
+        >
           <ArrowLeft size={18} />
         </button>
-        <div className="flex items-center gap-2">
-          <Badge tone="mint" dot>Anonymous</Badge>
-        </div>
+
+        <Badge tone="sage" dot>Anonymous</Badge>
+
         <button
           onClick={() => navigate(scanLocked ? '/patient/scan-locked' : '/patient/scan')}
-          className={`flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-full border transition ${
+          className={`flex items-center gap-1.5 text-[12px] px-3 py-1.5 rounded-full border transition font-medium ${
             scanLocked
-              ? 'border-muted-fg/20 text-muted-fg'
-              : 'border-mint-300/30 text-mint-200 hover:bg-mint-300/10'
+              ? 'border-[#E5DDD7] text-coal-muted bg-transparent'
+              : 'border-sage-200 text-sage-500 hover:bg-sage-50 hover:border-sage-300'
           }`}
         >
           {scanLocked ? <Lock size={12} /> : <Camera size={12} />}
@@ -69,18 +73,22 @@ export default function Chat() {
         </button>
       </header>
 
-      {/* Messages */}
-      <div ref={scrollRef} className="flex-1 overflow-y-auto px-5 py-5 space-y-3">
+      {/* ── Messages ───────────────────────────────────────── */}
+      <div ref={scrollRef} className="flex-1 overflow-y-auto px-5 py-5 space-y-3 bg-cream/40">
         {session.messages.length === 0 && (
           <div className="text-center py-8">
-            <h3 className="font-display text-xl text-white mb-2">What's on your mind?</h3>
-            <p className="text-sm text-muted-fg mb-6">Everything you say here stays private.</p>
+            <h3 className="font-display font-bold text-[20px] text-coal mb-2">
+              What's on your mind?
+            </h3>
+            <p className="text-[14px] text-coal-muted mb-6">
+              Everything you say here stays private.
+            </p>
             <div className="flex flex-col gap-2">
               {PROMPTS.map((p) => (
                 <button
                   key={p}
                   onClick={() => send(p)}
-                  className="text-left px-4 py-2.5 rounded-xl bg-ink-700 border border-mint-300/10 text-sm text-white hover:border-mint-300/30 transition"
+                  className="text-left px-4 py-2.5 rounded-xl bg-white border border-[#E5DDD7] text-[14px] text-coal hover:border-sage-300 hover:bg-sage-50 transition"
                 >
                   {p}
                 </button>
@@ -88,25 +96,35 @@ export default function Chat() {
             </div>
           </div>
         )}
+
         {session.messages.map((m) => (
           <MessageBubble key={m.id} message={m} />
         ))}
+
         {session.isTyping && (
-          <div className="flex justify-start"><TypingDots /></div>
+          <div className="flex justify-start">
+            <TypingDots />
+          </div>
         )}
 
+        {/* Doctor escalation CTA */}
         {showDoctorCta && (
-          <div className="card-ink p-4 mt-4">
+          <div className="card p-4 mt-4 border-care-amber/30 bg-care-amber-bg">
             <div className="flex items-start gap-3">
               <AlertTriangle className="text-care-amber flex-shrink-0 mt-0.5" size={18} />
               <div className="flex-1">
-                <p className="text-sm text-white font-medium">A doctor could help with this</p>
-                <p className="text-xs text-muted-fg mt-1">Your chat stays private — only a brief summary is shared.</p>
+                <p className="text-[14px] font-semibold text-coal">
+                  A doctor could help with this
+                </p>
+                <p className="text-[13px] text-coal-muted mt-1">
+                  Your chat stays private — only a brief AI summary is shared.
+                </p>
                 <button
                   onClick={() => navigate('/patient/escalation')}
-                  className="mt-3 inline-flex items-center gap-1.5 text-xs font-medium text-ember-500 hover:text-ember-400"
+                  className="mt-3 inline-flex items-center gap-1.5 text-[13px] font-semibold text-sage-500 hover:text-sage-600 transition"
                 >
-                  <Stethoscope size={14} /> Connect with a doctor
+                  <Stethoscope size={14} />
+                  Connect with a doctor
                 </button>
               </div>
             </div>
@@ -114,8 +132,8 @@ export default function Chat() {
         )}
       </div>
 
-      {/* Composer */}
-      <div className="px-4 pt-3 pb-5 border-t border-mint-300/10 bg-ink-900/80 backdrop-blur">
+      {/* ── Composer ───────────────────────────────────────── */}
+      <div className="px-4 pt-3 pb-5 border-t border-[#E5DDD7] bg-white">
         <div className="flex items-end gap-2">
           <textarea
             value={text}
@@ -123,12 +141,12 @@ export default function Chat() {
             onKeyDown={onKeyDown}
             placeholder="Type your concern…"
             rows={1}
-            className="input-ink resize-none max-h-32 text-sm py-3"
+            className="input-field resize-none max-h-32 text-[14px] !py-3"
           />
           <button
             onClick={() => send()}
             disabled={!text.trim() || session.isTyping}
-            className="btn-primary !p-3 !rounded-xl"
+            className="btn-primary !p-3 !rounded-xl flex-shrink-0"
             aria-label="Send"
           >
             <Send size={18} />
@@ -136,7 +154,7 @@ export default function Chat() {
         </div>
         <Link
           to="/patient/helpdesk"
-          className="block text-center text-[11px] text-muted-fg/70 mt-2.5 hover:text-care-red transition"
+          className="block text-center text-[11px] text-coal-subtle mt-2.5 hover:text-care-red transition"
         >
           Urgent? Call a hospital helpdesk
         </Link>

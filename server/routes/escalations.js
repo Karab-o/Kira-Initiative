@@ -118,7 +118,7 @@ router.get('/:id', requireDoctor, async (req, res, next) => {
 });
 
 const patchSchema = z.object({
-  status: z.enum(['pending', 'assigned', 'active', 'closed']).optional(),
+  status: z.enum(['pending', 'assigned', 'active', 'follow_up', 'closed']).optional(),
   assignedDoctorId: z.string().uuid().optional().nullable(),
   riskLevel: z.enum(['low', 'medium', 'high', 'critical']).optional(),
 });

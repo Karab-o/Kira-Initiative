@@ -1,151 +1,271 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { ArrowLeft, Upload, Check } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { ArrowLeft, Check, ShieldCheck, KeyRound, Building2, Lock } from 'lucide-react';
 import Button from '../../components/ui/Button.jsx';
-import { Input, Select } from '../../components/ui/Input.jsx';
+import { Input } from '../../components/ui/Input.jsx';
 import { useAuth } from '../../hooks/useAuth.js';
-import { api } from '../../lib/api.js';
 
-const STEPS = ['Personal', 'Professional', 'Documents'];
+const STEPS = [
+  { id: 'code',     label: 'Access code' },
+  { id: 'personal', label: 'Your details' },
+  { id: 'done',     label: 'Done' },
+];
 
 export default function Signup() {
   const navigate = useNavigate();
-  const { signup, apiError: getErr } = useAuth();
-  const [step, setStep] = useState(0);
-  const [hospitals, setHospitals] = useState([]);
-  const [form, setForm] = useState({
-    fullName: '', email: '', password: '',
-    medicalLicenseId: '', specialty: '', department: '', hospitalId: '',
+  const { signup, validateCode: apiValidateCode, apiError: getErr } = useAuth();
+
+  const [step, setStep]   = useState(0);
+  const [form, setForm]   = useState({
+    accessCode: '', fullName: '', email: '', password: '', confirmPassword: '',
   });
-  const [licenseFile, setLicenseFile] = useState(null);
-  const [error, setError] = useState(null);
+  const [codeInfo, setCodeInfo] = useState(null); // resolved hospital + specialty from code
+  const [error, setError]   = useState(null);
   const [loading, setLoading] = useState(false);
-  const [done, setDone] = useState(false);
 
-  useEffect(() => {
-    api.get('/hospitals').then(({ data }) => {
-      setHospitals(data.hospitals);
-      if (data.hospitals[0]) setForm((f) => ({ ...f, hospitalId: data.hospitals[0].id }));
-    });
-  }, []);
+  const set = (k) => (e) => setForm((f) => ({ ...f, [k]: e.target.value }));
 
-  const next = (e) => { e?.preventDefault(); setStep((s) => Math.min(STEPS.length - 1, s + 1)); };
-  const prev = () => setStep((s) => Math.max(0, s - 1));
-
-  const submit = async (e) => {
+  // Step 0 — validate access code against backend
+  const handleValidateCode = async (e) => {
     e.preventDefault();
     setError(null);
     setLoading(true);
     try {
-      const fd = new FormData();
-      Object.entries(form).forEach(([k, v]) => fd.append(k, v));
-      if (licenseFile) fd.append('license', licenseFile);
-      await signup(fd);
-      setDone(true);
+      const result = await apiValidateCode(form.accessCode);
+      setCodeInfo({ hospital: result.hospital.name, specialty: result.specialty, code: result.code });
+      setStep(1);
     } catch (err) {
-      setError(getErr(err));
+      setError(getErr(err) || 'Invalid access code. Contact your hospital administrator.');
     } finally {
       setLoading(false);
     }
   };
 
-  if (done) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-ink-950 px-6">
-        <div className="card-ink max-w-md text-center">
-          <div className="w-16 h-16 mx-auto rounded-2xl bg-care-green-bg border border-care-green/40 flex items-center justify-center mb-4">
-            <Check className="text-care-green" size={28} />
-          </div>
-          <h2 className="font-display text-2xl mb-2">Application submitted</h2>
-          <p className="text-sm text-muted-fg mb-6">
-            We'll review your medical license within 24–48 hours. You'll receive an email once verified.
-          </p>
-          <Link to="/doctor/login" className="btn-mint inline-flex">Back to sign in</Link>
-        </div>
-      </div>
-    );
-  }
+  // Step 1 — submit full signup
+  const submitSignup = async (e) => {
+    e.preventDefault();
+    setError(null);
+    if (form.password !== form.confirmPassword) {
+      return setError('Passwords do not match.');
+    }
+    if (form.password.length < 8) {
+      return setError('Password must be at least 8 characters.');
+    }
+    setLoading(true);
+    try {
+      await signup({
+        accessCode:  codeInfo.code,
+        fullName:    form.fullName,
+        email:       form.email,
+        password:    form.password,
+      });
+      setStep(2);
+    } catch (err) {
+      setError(getErr(err) || 'Setup failed. Check your details and try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
-    <div className="min-h-screen bg-ink-950 px-6 py-10 text-white">
-      <div className="max-w-lg mx-auto">
-        <Link to="/doctor/login" className="inline-flex items-center gap-1.5 text-sm text-muted-fg hover:text-white mb-6">
-          <ArrowLeft size={14} /> Back to sign in
-        </Link>
+    <div className="min-h-screen bg-cream flex items-center justify-center px-5 py-10">
+      <div className="w-full max-w-md">
 
-        <div className="flex items-center justify-between mb-7">
-          {STEPS.map((label, i) => (
-            <div key={label} className="flex-1 flex items-center">
-              <div className={`flex items-center gap-2 ${i === step ? 'text-white' : 'text-muted-fg'}`}>
-                <span className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-mono ${
-                  i < step ? 'bg-mint-500 text-white' : i === step ? 'bg-ember-500 text-white' : 'bg-ink-700 text-muted-fg'
+        {/* Back link */}
+        {step < 2 && (
+          <Link
+            to="/doctor/login"
+            className="inline-flex items-center gap-1.5 text-[13px] text-coal-muted hover:text-coal mb-6 transition"
+          >
+            <ArrowLeft size={14} /> Back to sign in
+          </Link>
+        )}
+
+        {/* Step indicators */}
+        {step < 2 && (
+          <div className="flex items-center gap-2 mb-7">
+            {STEPS.slice(0, 2).map((s, i) => (
+              <div key={s.id} className="flex items-center gap-2 flex-1">
+                <div className={`w-7 h-7 rounded-full flex items-center justify-center text-[12px] font-bold flex-shrink-0 transition ${
+                  i < step  ? 'bg-sage-500 text-white' :
+                  i === step ? 'bg-sage-500 text-white ring-4 ring-sage-100' :
+                               'bg-surface-muted text-coal-muted'
                 }`}>
-                  {i < step ? <Check size={14} /> : i + 1}
+                  {i < step ? <Check size={13} /> : i + 1}
+                </div>
+                <span className={`text-[13px] font-medium ${i === step ? 'text-coal' : 'text-coal-muted'}`}>
+                  {s.label}
                 </span>
-                <span className="hidden sm:inline text-sm">{label}</span>
+                {i < 1 && <div className="flex-1 h-px bg-[#E5DDD7] mx-1" />}
               </div>
-              {i < STEPS.length - 1 && <div className="flex-1 h-px bg-mint-300/15 mx-2" />}
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
 
-        <div className="card-ink">
-          <h2 className="font-display text-2xl mb-1">Create doctor account</h2>
-          <p className="text-sm text-muted-fg mb-6">
-            {step === 0 && 'Tell us who you are.'}
-            {step === 1 && 'Your professional details.'}
-            {step === 2 && 'Upload proof of license.'}
-          </p>
+        <AnimatePresence mode="wait">
 
+          {/* ── Step 0: Access code ─────────────────────── */}
           {step === 0 && (
-            <form onSubmit={next} className="space-y-4">
-              <Input label="Full name" value={form.fullName} onChange={(e) => setForm({ ...form, fullName: e.target.value })} required />
-              <Input label="Work email" type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} required />
-              <Input label="Password" type="password" value={form.password} onChange={(e) => setForm({ ...form, password: e.target.value })} required minLength={8} hint="At least 8 characters" />
-              <Button type="submit" className="w-full mt-2">Continue</Button>
-            </form>
+            <motion.div
+              key="code"
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -12 }}
+              transition={{ duration: 0.3 }}
+            >
+              <div className="card p-7">
+                <div className="w-14 h-14 rounded-2xl bg-sage-100 flex items-center justify-center mb-5">
+                  <KeyRound size={26} className="text-sage-500" />
+                </div>
+                <h2 className="font-display font-bold text-[26px] text-coal mb-2">
+                  Enter your access code
+                </h2>
+                <p className="text-[14px] text-coal-muted mb-6 leading-relaxed">
+                  Doctor accounts are invitation-only. Your hospital administrator provides a unique access code when onboarding you to Kira Initiative.
+                </p>
+
+                <form onSubmit={handleValidateCode} className="space-y-4">
+                  <Input
+                    label="Doctor access code"
+                    placeholder="KIRA-RMH-82JH"
+                    value={form.accessCode}
+                    onChange={set('accessCode')}
+                    required
+                    autoComplete="off"
+                    hint="Format: KIRA-XXX-XXXX (case-insensitive)"
+                  />
+                  {error && (
+                    <p className="text-[13px] text-care-red bg-care-red-bg border border-care-red/20 rounded-xl px-4 py-3">
+                      {error}
+                    </p>
+                  )}
+                  <Button type="submit" size="lg" className="w-full" loading={loading}>
+                    <ShieldCheck size={16} /> Verify access code
+                  </Button>
+                </form>
+
+                <div className="mt-6 pt-5 border-t border-[#E5DDD7]">
+                  <p className="text-[12px] text-coal-muted text-center">
+                    Don't have a code?{' '}
+                    <a
+                      href="mailto:admin@kirainitiative.rw"
+                      className="text-sage-500 hover:text-sage-600 font-medium"
+                    >
+                      Contact admin@kirainitiative.rw
+                    </a>
+                  </p>
+                </div>
+              </div>
+            </motion.div>
           )}
 
+          {/* ── Step 1: Personal details ────────────────── */}
           {step === 1 && (
-            <form onSubmit={next} className="space-y-4">
-              <Input label="Medical license ID" value={form.medicalLicenseId} onChange={(e) => setForm({ ...form, medicalLicenseId: e.target.value })} required />
-              <Input label="Specialty" value={form.specialty} onChange={(e) => setForm({ ...form, specialty: e.target.value })} required placeholder="e.g. Urology" />
-              <Input label="Department" value={form.department} onChange={(e) => setForm({ ...form, department: e.target.value })} required />
-              <Select label="Hospital" value={form.hospitalId} onChange={(e) => setForm({ ...form, hospitalId: e.target.value })} required>
-                {hospitals.map((h) => <option key={h.id} value={h.id}>{h.name}</option>)}
-              </Select>
-              <div className="flex gap-2 mt-2">
-                <Button type="button" variant="ghost" onClick={prev} className="flex-1">Back</Button>
-                <Button type="submit" className="flex-1">Continue</Button>
+            <motion.div
+              key="personal"
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -12 }}
+              transition={{ duration: 0.3 }}
+            >
+              <div className="card p-7">
+                {/* Code confirmed banner */}
+                {codeInfo && (
+                  <div className="flex items-center gap-2.5 bg-sage-50 border border-sage-200 rounded-xl px-4 py-3 mb-6">
+                    <Building2 size={15} className="text-sage-500 flex-shrink-0" />
+                    <div>
+                      <p className="text-[13px] font-semibold text-coal">{codeInfo.hospital}</p>
+                      <p className="text-[11px] text-coal-muted font-mono">{codeInfo.code}</p>
+                    </div>
+                    <div className="ml-auto w-6 h-6 rounded-full bg-sage-500 flex items-center justify-center flex-shrink-0">
+                      <Check size={12} className="text-white" />
+                    </div>
+                  </div>
+                )}
+
+                <h2 className="font-display font-bold text-[24px] text-coal mb-1">Set up your account</h2>
+                <p className="text-[14px] text-coal-muted mb-6">
+                  This creates your personal login credentials.
+                </p>
+
+                <form onSubmit={submitSignup} className="space-y-4">
+                  <Input
+                    label="Full name"
+                    placeholder="Dr. Sarah Uwase"
+                    value={form.fullName}
+                    onChange={set('fullName')}
+                    required
+                    autoComplete="name"
+                  />
+                  <Input
+                    label="Work email"
+                    type="email"
+                    placeholder="s.uwase@rmh.gov.rw"
+                    value={form.email}
+                    onChange={set('email')}
+                    required
+                    autoComplete="email"
+                  />
+                  <Input
+                    label="Password"
+                    type="password"
+                    value={form.password}
+                    onChange={set('password')}
+                    required
+                    minLength={8}
+                    hint="At least 8 characters"
+                  />
+                  <Input
+                    label="Confirm password"
+                    type="password"
+                    value={form.confirmPassword}
+                    onChange={set('confirmPassword')}
+                    required
+                  />
+
+                  {error && (
+                    <p className="text-[13px] text-care-red bg-care-red-bg border border-care-red/20 rounded-xl px-4 py-3">
+                      {error}
+                    </p>
+                  )}
+
+                  <div className="flex gap-2.5 pt-1">
+                    <Button type="button" variant="ghost" onClick={() => setStep(0)} className="flex-1">
+                      Back
+                    </Button>
+                    <Button type="submit" loading={loading} className="flex-1">
+                      <Lock size={15} /> Create account
+                    </Button>
+                  </div>
+                </form>
               </div>
-            </form>
+            </motion.div>
           )}
 
+          {/* ── Step 2: Done ────────────────────────────── */}
           {step === 2 && (
-            <form onSubmit={submit} className="space-y-4">
-              <label className="block">
-                <span className="block text-sm font-medium text-muted-fg mb-1.5">Medical license document</span>
-                <label className="card-ink !p-5 flex items-center gap-3 cursor-pointer hover:border-mint-300/40 transition">
-                  <div className="w-10 h-10 rounded-xl bg-mint-300/15 border border-mint-300/30 flex items-center justify-center">
-                    <Upload className="text-mint-300" size={18} />
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium truncate">{licenseFile?.name || 'Tap to upload (PDF or image)'}</p>
-                    <p className="text-xs text-muted-fg">Max 10MB</p>
-                  </div>
-                  <input type="file" accept="application/pdf,image/*" onChange={(e) => setLicenseFile(e.target.files?.[0])} className="hidden" />
-                </label>
-              </label>
-
-              {error && <p className="text-sm text-care-red">{error}</p>}
-
-              <div className="flex gap-2 mt-2">
-                <Button type="button" variant="ghost" onClick={prev} className="flex-1">Back</Button>
-                <Button type="submit" loading={loading} className="flex-1">Submit application</Button>
+            <motion.div
+              key="done"
+              initial={{ opacity: 0, scale: 0.96 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.4 }}
+            >
+              <div className="card p-8 text-center">
+                <div className="w-16 h-16 mx-auto rounded-2xl bg-sage-100 border border-sage-200 flex items-center justify-center mb-5">
+                  <Check className="text-sage-500" size={28} />
+                </div>
+                <h2 className="font-display font-bold text-[26px] text-coal mb-2">Account created</h2>
+                <p className="text-[14px] text-coal-muted mb-6 leading-relaxed">
+                  Your account is being reviewed against hospital records. You'll receive an email once your medical ID is confirmed — usually within 24–48 hours.
+                </p>
+                <Button onClick={() => navigate('/doctor/login')} size="lg" className="w-full">
+                  Back to sign in
+                </Button>
               </div>
-            </form>
+            </motion.div>
           )}
-        </div>
+        </AnimatePresence>
       </div>
     </div>
   );

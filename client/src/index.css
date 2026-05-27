@@ -3,50 +3,57 @@
 @tailwind utilities;
 
 @layer base {
-  :root {
-    color-scheme: dark;
-  }
-
   html, body, #root {
     height: 100%;
-    background: #0a1410;
+  }
+
+  html {
+    background: #F8F5F2;
   }
 
   body {
-    @apply font-body text-white antialiased;
-    background:
-      radial-gradient(1200px 600px at 20% -10%, rgba(122, 173, 138, 0.10), transparent 60%),
-      radial-gradient(900px 500px at 100% 100%, rgba(255, 107, 53, 0.06), transparent 60%),
-      #0a1410;
-    background-attachment: fixed;
+    font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+    color: #222222;
+    background: #F8F5F2;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 
   ::selection {
-    background: rgba(255, 107, 53, 0.35);
-    color: #fff;
+    background: rgba(79, 138, 107, 0.18);
+    color: #222222;
   }
 
-  /* Scrollbars */
-  ::-webkit-scrollbar { width: 10px; height: 10px; }
-  ::-webkit-scrollbar-track { background: transparent; }
-  ::-webkit-scrollbar-thumb {
-    background: rgba(122, 173, 138, 0.18);
-    border-radius: 10px;
+  ::-webkit-scrollbar        { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track  { background: transparent; }
+  ::-webkit-scrollbar-thumb  {
+    background: rgba(143, 175, 139, 0.40);
+    border-radius: 6px;
   }
-  ::-webkit-scrollbar-thumb:hover { background: rgba(122, 173, 138, 0.35); }
+  ::-webkit-scrollbar-thumb:hover { background: rgba(94, 122, 100, 0.55); }
 }
 
 @layer components {
-  .glass {
-    background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02));
-    border: 1px solid rgba(122, 173, 138, 0.12);
-    backdrop-filter: blur(8px);
+  /* ── Cards ─────────────────────────────────────────────────── */
+  .card {
+    @apply bg-white border border-[#E5DDD7] rounded-2xl shadow-card;
   }
-
+  .card-soft {
+    @apply bg-[#F8F5F2] border border-[#EDE7E3] rounded-2xl;
+  }
+  /* Legacy dark card (doctor portal) */
   .card-ink {
     @apply bg-ink-700/70 border border-mint-300/10 rounded-2xl shadow-card;
   }
 
+  /* ── Form inputs ───────────────────────────────────────────── */
+  .input-field {
+    @apply w-full bg-white border-[1.5px] border-[#E5DDD7] rounded-xl px-4 py-3
+           text-coal placeholder:text-coal-subtle
+           focus:outline-none focus:ring-2 focus:ring-sage-300/40 focus:border-sage-300
+           transition text-[15px];
+  }
+  /* Legacy dark input */
   .input-ink {
     @apply w-full bg-ink-800/80 border border-mint-300/15 rounded-xl px-4 py-3
            text-white placeholder:text-muted-fg/60
@@ -54,25 +61,47 @@
            transition;
   }
 
+  /* ── Buttons ───────────────────────────────────────────────── */
   .btn-primary {
-    @apply inline-flex items-center justify-center gap-2 bg-ember-500 hover:bg-ember-600
-           text-white font-medium px-5 py-3 rounded-xl shadow-ember
-           transition active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed;
+    @apply inline-flex items-center justify-center gap-2
+           bg-sage-500 hover:bg-sage-600 active:bg-sage-600
+           text-white font-semibold px-5 py-3 rounded-xl shadow-green
+           transition active:scale-[0.98]
+           disabled:opacity-50 disabled:cursor-not-allowed;
   }
-
-  .btn-mint {
-    @apply inline-flex items-center justify-center gap-2 bg-mint-500 hover:bg-mint-600
-           text-white font-medium px-5 py-3 rounded-xl shadow-card
-           transition active:scale-[0.98] disabled:opacity-50;
+  .btn-soft {
+    @apply inline-flex items-center justify-center gap-2
+           bg-sage-100 hover:bg-sage-200
+           text-sage-600 font-semibold px-5 py-3 rounded-xl
+           transition active:scale-[0.98]
+           disabled:opacity-50 disabled:cursor-not-allowed;
   }
-
   .btn-ghost {
-    @apply inline-flex items-center justify-center gap-2 bg-transparent
-           border border-mint-300/25 hover:border-mint-300/50 hover:bg-mint-300/5
-           text-white font-medium px-5 py-3 rounded-xl transition active:scale-[0.98];
+    @apply inline-flex items-center justify-center gap-2
+           bg-transparent border-[1.5px] border-[#E5DDD7]
+           hover:border-sage-300 hover:bg-sage-50
+           text-coal font-medium px-5 py-3 rounded-xl
+           transition active:scale-[0.98];
+  }
+  /* Legacy dark buttons */
+  .btn-ember {
+    @apply inline-flex items-center justify-center gap-2
+           bg-ember-500 hover:bg-ember-600
+           text-white font-medium px-5 py-3 rounded-xl shadow-ember
+           transition active:scale-[0.98]
+           disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+  .btn-mint {
+    @apply inline-flex items-center justify-center gap-2
+           bg-mint-500 hover:bg-mint-600
+           text-white font-medium px-5 py-3 rounded-xl
+           transition active:scale-[0.98]
+           disabled:opacity-50;
   }
 
+  /* ── Badge pill ────────────────────────────────────────────── */
   .pill {
-    @apply inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono uppercase tracking-wide;
+    @apply inline-flex items-center gap-1.5 px-3 py-[3px]
+           rounded-full text-[11px] font-semibold uppercase tracking-wide;
   }
 }

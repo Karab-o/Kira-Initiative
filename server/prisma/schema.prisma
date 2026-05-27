@@ -61,6 +61,7 @@ model ScanImage {
 
 // ─────────────────────────────────────────
 // ESCALATION — anonymity ends here, minimal PII captured
+// status: pending | assigned | active | follow_up | closed
 // ─────────────────────────────────────────
 
 model Escalation {
@@ -75,7 +76,7 @@ model Escalation {
   hospital             Hospital         @relation(fields: [hospitalId], references: [id])
   symptomSummary       String
   escalationReason     String
-  severityAtEscalation String
+  severityAtEscalation String           // green | amber | red
   status               String           @default("pending")
   assignedDoctorId     String?
   doctor               Doctor?          @relation(fields: [assignedDoctorId], references: [id])
@@ -86,6 +87,7 @@ model Escalation {
 
   @@index([status, severityAtEscalation])
   @@index([assignedDoctorId])
+  @@index([hospitalId, status])
 }
 
 // ─────────────────────────────────────────
@@ -98,26 +100,44 @@ model Doctor {
   passwordHash       String
   fullName           String
   medicalLicenseId   String         @unique
-  specialty          String
+  specialty          String         // Human-readable: "Gynecologist", "Urologist", etc.
   department         String
   hospitalId         String
   hospital           Hospital       @relation(fields: [hospitalId], references: [id])
   licenseFilePath    String?
   profilePhoto       String?
-  verificationStatus String         @default("pending")
+  verificationStatus String         @default("pending") // pending | approved | rejected
   verificationNote   String?
   isOnline           Boolean        @default(false)
   twoFAEnabled       Boolean        @default(false)
   twoFASecret        String?
-  role               String         @default("doctor") // "doctor" | "admin"
+  role               String         @default("doctor") // doctor | admin
   escalations        Escalation[]
   consultations      Consultation[]
   appointments       Appointment[]
+  otpCodes           OtpCode[]
   createdAt          DateTime       @default(now())
   updatedAt          DateTime       @updatedAt
 
   @@index([hospitalId])
   @@index([verificationStatus])
+  @@index([medicalLicenseId])
+}
+
+// ─────────────────────────────────────────
+// OTP CODES — email-based 2FA
+// ─────────────────────────────────────────
+
+model OtpCode {
+  id        String   @id @default(uuid())
+  doctorId  String
+  doctor    Doctor   @relation(fields: [doctorId], references: [id], onDelete: Cascade)
+  code      String
+  expiresAt DateTime
+  used      Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@index([doctorId, expiresAt])
 }
 
 // ─────────────────────────────────────────
@@ -130,8 +150,8 @@ model Consultation {
   escalation      Escalation       @relation(fields: [escalationId], references: [id])
   doctorId        String
   doctor          Doctor           @relation(fields: [doctorId], references: [id])
-  status          String           @default("active")
-  riskLevel       String?
+  status          String           @default("active") // active | completed | archived
+  riskLevel       String?          // low | medium | high | critical
   consultMessages ConsultMessage[]
   internalNotes   InternalNote[]
   soapNote        SoapNote?
@@ -148,7 +168,7 @@ model ConsultMessage {
   id             String       @id @default(uuid())
   consultationId String
   consultation   Consultation @relation(fields: [consultationId], references: [id], onDelete: Cascade)
-  senderRole     String
+  senderRole     String       // doctor | patient
   content        String
   fileUrl        String?
   seenByPatient  Boolean      @default(false)
@@ -203,12 +223,13 @@ model Appointment {
   hospitalId   String
   hospital     Hospital   @relation(fields: [hospitalId], references: [id])
   scheduledAt  DateTime
-  type         String
-  status       String     @default("scheduled")
+  type         String     // in-person | video | phone
+  status       String     @default("scheduled") // scheduled | completed | cancelled | no-show
   notes        String?
   createdAt    DateTime   @default(now())
 
   @@index([doctorId, scheduledAt])
+  @@index([hospitalId, scheduledAt])
 }
 
 // ─────────────────────────────────────────
@@ -219,14 +240,36 @@ model Hospital {
   id            String        @id @default(uuid())
   name          String
   fullName      String
+  code          String        @unique  // short code: RMH, KFH, CHUK, etc.
   address       String
   helpdeskPhone String
-  type          String
+  type          String        // public | private | referral
   menHealth     Boolean       @default(true)
   departments   String[]
   doctors       Doctor[]
   escalations   Escalation[]
   appointments  Appointment[]
+  accessCodes   AccessCode[]
+}
+
+// ─────────────────────────────────────────
+// ACCESS CODES — hospital-issued doctor onboarding codes
+// Format: KIRA-{HOSPITAL_CODE}-{RANDOM}
+// ─────────────────────────────────────────
+
+model AccessCode {
+  id         String    @id @default(uuid())
+  code       String    @unique  // e.g. KIRA-RMH-82JH
+  hospitalId String
+  hospital   Hospital  @relation(fields: [hospitalId], references: [id])
+  specialty  String    // Which specialty this code is intended for
+  isUsed     Boolean   @default(false)
+  usedAt     DateTime?
+  expiresAt  DateTime?
+  createdAt  DateTime  @default(now())
+
+  @@index([hospitalId])
+  @@index([code])
 }
 
 // ─────────────────────────────────────────

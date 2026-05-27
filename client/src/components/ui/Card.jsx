@@ -4,7 +4,7 @@ export default function Card({ className, children, padded = true, ...rest }) {
   return (
     <div
       className={cn(
-        'card-ink',
+        'card',
         padded && 'p-5 md:p-6',
         className,
       )}
