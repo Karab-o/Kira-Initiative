@@ -71,12 +71,12 @@ export default function DoctorConnection() {
     return (
       <MobileFrame>
         <div className="flex-1 flex flex-col items-center justify-center px-7 text-center">
-          <div className="w-20 h-20 rounded-full bg-care-green-bg border border-care-green/40 flex items-center justify-center mb-6">
+          <div className="w-20 h-20 rounded-full bg-care-green-bg border border-care-green/30 flex items-center justify-center mb-6">
             <Check className="text-care-green" size={36} />
           </div>
-          <h2 className="font-display text-2xl text-white mb-2">Appointment booked</h2>
-          <p className="text-sm text-muted-fg mb-1">{selected.fullName}</p>
-          <p className="text-sm text-mint-200 mb-8">{new Date(chosenSlot).toLocaleString()}</p>
+          <h2 className="font-display text-2xl text-coal mb-2">Appointment booked</h2>
+          <p className="text-sm text-coal-muted mb-1">{selected.fullName}</p>
+          <p className="text-sm text-sage-500 font-medium mb-8">{new Date(chosenSlot).toLocaleString()}</p>
           <Button onClick={() => navigate('/patient/consultation')} className="w-full">Start consultation chat</Button>
         </div>
       </MobileFrame>
@@ -85,11 +85,12 @@ export default function DoctorConnection() {
 
   return (
     <MobileFrame>
-      <header className="px-5 py-4 border-b border-mint-300/10 flex items-center justify-between">
-        <button onClick={() => navigate(-1)} className="text-muted-fg hover:text-white">
+      {/* Header */}
+      <header className="px-5 py-4 border-b border-border flex items-center justify-between">
+        <button onClick={() => navigate(-1)} className="text-coal-muted hover:text-coal transition">
           <ArrowLeft size={18} />
         </button>
-        <span className="font-display text-base">Choose a doctor</span>
+        <span className="font-display text-base text-coal">Choose a doctor</span>
         <span className="w-5" />
       </header>
 
@@ -98,17 +99,22 @@ export default function DoctorConnection() {
           <div className="flex justify-center py-16"><Spinner size={26} /></div>
         ) : (
           <>
+            {/* Doctor list */}
             <div className="space-y-2">
               {doctors.map((d) => (
                 <DoctorCard key={d.id} doctor={d} selected={selected?.id === d.id} onSelect={setSelected} />
               ))}
+              {doctors.length === 0 && (
+                <p className="text-sm text-coal-muted text-center py-8">No doctors available at this hospital right now.</p>
+              )}
             </div>
 
+            {/* Slot picker */}
             {selected && (
-              <div className="card-ink">
-                <p className="text-xs uppercase tracking-wider font-mono text-muted-fg mb-3">Available times</p>
+              <div className="card p-4">
+                <p className="text-xs uppercase tracking-wider font-mono text-coal-subtle mb-3">Available times</p>
                 {slots.length === 0 ? (
-                  <p className="text-sm text-muted-fg">No slots available — try the helpdesk to call directly.</p>
+                  <p className="text-sm text-coal-muted">No slots available — try the helpdesk to call directly.</p>
                 ) : (
                   <div className="grid grid-cols-2 gap-2">
                     {slots.map((s) => {
@@ -120,8 +126,8 @@ export default function DoctorConnection() {
                           onClick={() => setChosenSlot(s)}
                           className={`px-3 py-2.5 rounded-xl border text-sm transition ${
                             active
-                              ? 'border-ember-500/60 bg-ember-500/10 text-white'
-                              : 'border-mint-300/15 bg-ink-800 text-muted-fg hover:border-mint-300/40 hover:text-white'
+                              ? 'border-sage-500 bg-sage-50 text-coal shadow-green'
+                              : 'border-border-soft bg-surface-soft text-coal-muted hover:border-sage-300 hover:text-coal'
                           }`}
                         >
                           <div className="font-medium">{d.toLocaleDateString(undefined, { weekday: 'short', day: 'numeric' })}</div>
@@ -140,10 +146,11 @@ export default function DoctorConnection() {
               Book online consultation
             </Button>
 
-            <div className="flex items-center gap-3 text-muted-fg/60 text-xs">
-              <div className="flex-1 h-px bg-mint-300/10" />
+            {/* Divider */}
+            <div className="flex items-center gap-3 text-coal-subtle text-xs">
+              <div className="flex-1 h-px bg-border" />
               <span>or prefer to call</span>
-              <div className="flex-1 h-px bg-mint-300/10" />
+              <div className="flex-1 h-px bg-border" />
             </div>
 
             <Button variant="ghost" onClick={() => navigate('/patient/helpdesk')} className="w-full">

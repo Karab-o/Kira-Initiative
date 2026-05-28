@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import {
-  ShieldCheck, MessageCircle, Camera, Stethoscope,
+  ShieldCheck, MessageCircle, Stethoscope,
   Lock, ArrowRight, UserRound, Briefcase,
   Inbox, NotebookPen, CalendarDays,
 } from 'lucide-react';
@@ -20,7 +20,7 @@ export default function Landing() {
               Kira Initiative
             </p>
             <p className="text-[11px] text-coal-muted tracking-wide">
-              Private health · Rwanda
+              Sexual health · Rwanda
             </p>
           </div>
         </div>
@@ -42,7 +42,7 @@ export default function Landing() {
             className="text-center mb-10 md:mb-12"
           >
             <h1 className="font-display font-bold text-4xl md:text-5xl text-coal leading-[1.1] mb-3">
-              Private support when you<br className="hidden md:block" /> need it most.
+              Private sexual health support<br className="hidden md:block" /> when you need it.
             </h1>
             <p className="text-coal-muted text-base md:text-lg max-w-sm mx-auto leading-relaxed">
               How would you like to continue?
@@ -65,21 +65,21 @@ export default function Landing() {
                 </div>
                 <div>
                   <p className="font-semibold text-coal text-[15px]">I'm here for myself</p>
-                  <p className="text-[12px] text-coal-muted">Patient · User</p>
+                  <p className="text-[12px] text-coal-muted">Patient · Women & Men welcome</p>
                 </div>
               </div>
 
               <p className="text-[14px] text-coal-muted mb-6 leading-relaxed">
-                Get anonymous AI guidance for emotional and sexual health. No account needed — your privacy is guaranteed.
+                Get confidential AI guidance on sexual health. No account needed — your privacy is fully protected.
               </p>
 
               <ul className="space-y-2.5 mb-7">
                 <FeatureRow icon={Lock} label="No account · No history · No judgment" />
                 <FeatureRow icon={MessageCircle} label="Anonymous AI chat with Kira" />
-                <FeatureRow icon={Stethoscope} label="Escalate to a verified doctor when needed" />
+                <FeatureRow icon={Stethoscope} label="Connect to a gynaecologist or urologist when needed" />
               </ul>
 
-              <div className="mt-auto space-y-2.5">
+              <div className="mt-auto">
                 <button
                   onClick={() => navigate('/patient')}
                   className="w-full btn-primary"
@@ -87,20 +87,6 @@ export default function Landing() {
                   Continue anonymously
                   <ArrowRight size={16} />
                 </button>
-                <div className="grid grid-cols-2 gap-2">
-                  <button
-                    onClick={() => navigate('/patient/login')}
-                    className="btn-ghost !py-2.5 text-[14px]"
-                  >
-                    Login
-                  </button>
-                  <button
-                    onClick={() => navigate('/patient/signup')}
-                    className="btn-ghost !py-2.5 text-[14px]"
-                  >
-                    Sign up
-                  </button>
-                </div>
               </div>
             </motion.div>
 
@@ -117,17 +103,17 @@ export default function Landing() {
                 </div>
                 <div>
                   <p className="font-semibold text-coal text-[15px]">I'm a clinician</p>
-                  <p className="text-[12px] text-coal-muted">Doctor · Healthcare provider</p>
+                  <p className="text-[12px] text-coal-muted">Gynaecologist · Urologist · Specialist</p>
                 </div>
               </div>
 
               <p className="text-[14px] text-coal-muted mb-6 leading-relaxed">
-                Access the clinical portal to review escalated cases, manage consultations, and prescribe care.
+                Access the clinical portal to review sexual health cases, manage consultations, and prescribe care.
               </p>
 
               <ul className="space-y-2.5 mb-7">
-                <FeatureRow icon={Inbox} label="Triaged case queue with risk levels" variant="sage" />
-                <FeatureRow icon={NotebookPen} label="AI summaries — never raw chat logs" variant="sage" />
+                <FeatureRow icon={Inbox} label="Triaged sexual health case queue" variant="sage" />
+                <FeatureRow icon={NotebookPen} label="AI clinical summaries — never raw chat logs" variant="sage" />
                 <FeatureRow icon={CalendarDays} label="Secure messaging, prescriptions & appointments" variant="sage" />
               </ul>
 
@@ -136,7 +122,7 @@ export default function Landing() {
                   onClick={() => navigate('/doctor/login')}
                   className="w-full btn-primary"
                 >
-                  Doctor login
+                  Clinician login
                   <ArrowRight size={16} />
                 </button>
                 <button
@@ -164,7 +150,7 @@ export default function Landing() {
 
       {/* ── Footer ───────────────────────────────────────────── */}
       <footer className="px-6 py-4 border-t border-[#EDE7E3] text-center text-[11px] text-coal-subtle">
-        © 2025 Kira Initiative · Built for men in Rwanda · All sessions are encrypted end-to-end
+        © 2025 Kira Initiative · Private sexual health support for Rwanda · All sessions are anonymous
       </footer>
     </div>
   );

@@ -17,12 +17,12 @@ export default function Modal({ open, onClose, title, children, footer, size = '
     <AnimatePresence>
       {open && (
         <motion.div
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-ink-950/70 backdrop-blur-sm"
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm"
           initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
           onClick={dismissable ? onClose : undefined}
         >
           <motion.div
-            className={cn('card-ink w-full p-6 relative', widths[size])}
+            className={cn('card w-full p-6 relative', widths[size])}
             initial={{ opacity: 0, y: 12, scale: 0.98 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 8, scale: 0.98 }}
@@ -30,9 +30,9 @@ export default function Modal({ open, onClose, title, children, footer, size = '
           >
             {(title || dismissable) && (
               <div className="flex items-start justify-between gap-4 mb-4">
-                {title && <h3 className="text-lg font-display text-white">{title}</h3>}
+                {title && <h3 className="text-lg font-display text-coal">{title}</h3>}
                 {dismissable && (
-                  <button onClick={onClose} className="text-muted-fg hover:text-white transition" aria-label="Close">
+                  <button onClick={onClose} className="text-coal-muted hover:text-coal transition" aria-label="Close">
                     <X size={18} />
                   </button>
                 )}

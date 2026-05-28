@@ -10,6 +10,7 @@ import {
   classifyConversation,
   analyseScanImage,
   summariseForDoctor,
+  isAnthropicBillingError,
 } from '../services/claudeService.js';
 import { checkMessage, applyClassifierLocks } from '../services/safetyEngine.js';
 import { logger } from '../utils/logger.js';
@@ -119,7 +120,26 @@ router.post('/chat', aiRateLimit, requireSession, async (req, res, next) => {
       }
     } catch (streamErr) {
       logger.error('chat stream failed', streamErr);
-      sendEvent('error', { message: 'AI stream failed mid-response' });
+
+      // Billing / credits exhausted — send a graceful Kira message instead of a
+      // raw error so the user sees something helpful rather than a broken bubble.
+      if (isAnthropicBillingError(streamErr)) {
+        const gracefulMsg = fullText.length > 0
+          ? null  // already sent some text; just close cleanly
+          : "I'm having a brief interruption and can't respond right now. Please try again in a moment, or call the hospital helpdesk if your concern is urgent.";
+
+        if (gracefulMsg) {
+          sendEvent('delta', { text: gracefulMsg });
+          // Persist the fallback as an assistant message
+          await prisma.message.create({
+            data: { sessionId: session.id, role: 'assistant', content: gracefulMsg, careBadge: 'green' },
+          }).catch(() => {});
+        }
+        sendEvent('done', {});
+        return res.end();
+      }
+
+      sendEvent('error', { message: 'AI response failed. Please try again.' });
       sendEvent('done', {});
       return res.end();
     }

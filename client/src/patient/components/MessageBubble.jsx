@@ -17,7 +17,9 @@ export default function MessageBubble({ message }) {
             'px-4 py-3 text-[14px] leading-relaxed whitespace-pre-wrap',
             isUser
               ? 'bg-sage-500 text-white rounded-2xl rounded-br-sm'
-              : 'bg-white text-coal border border-[#E5DDD7] rounded-2xl rounded-bl-sm shadow-soft',
+              : message.isError
+                ? 'bg-care-amber-bg text-coal-muted border border-care-amber/25 rounded-2xl rounded-bl-sm text-[13px] italic'
+                : 'bg-white text-coal border border-[#E5DDD7] rounded-2xl rounded-bl-sm shadow-soft',
           )}
         >
           {message.content}

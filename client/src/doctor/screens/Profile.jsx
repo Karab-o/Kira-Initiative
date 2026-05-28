@@ -36,22 +36,22 @@ export default function Profile() {
   return (
     <div className="max-w-xl space-y-6">
       <div>
-        <h1 className="font-display text-3xl text-white mb-1">Profile</h1>
-        <p className="text-sm text-muted-fg">Public information shown to patients picking a doctor.</p>
+        <h1 className="font-display text-3xl text-coal mb-1">Profile</h1>
+        <p className="text-sm text-coal-muted">Public information shown to patients picking a doctor.</p>
       </div>
 
-      <form onSubmit={save} className="card-ink space-y-4">
+      <form onSubmit={save} className="card p-4 space-y-4">
         <Input label="Full name" value={form.fullName} onChange={(e) => setForm({ ...form, fullName: e.target.value })} required />
         <Input label="Specialty" value={form.specialty} onChange={(e) => setForm({ ...form, specialty: e.target.value })} required />
         <Input label="Department" value={form.department} onChange={(e) => setForm({ ...form, department: e.target.value })} required />
 
         <label className="block">
-          <span className="block text-sm font-medium text-muted-fg mb-1.5">Profile photo (optional)</span>
+          <span className="block text-sm font-medium text-coal-muted mb-1.5">Profile photo (optional)</span>
           <input
             type="file"
             accept="image/*"
             onChange={(e) => setPhoto(e.target.files?.[0])}
-            className="block text-sm text-muted-fg file:mr-3 file:py-2 file:px-3 file:rounded-lg file:border file:border-mint-300/30 file:bg-mint-300/10 file:text-mint-200 file:cursor-pointer hover:file:bg-mint-300/15"
+            className="block text-sm text-coal-muted file:mr-3 file:py-2 file:px-3 file:rounded-lg file:border file:border-sage-200 file:bg-sage-50 file:text-sage-600 file:cursor-pointer hover:file:bg-sage-100"
           />
         </label>
 

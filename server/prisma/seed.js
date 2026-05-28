@@ -83,30 +83,28 @@ const HOSPITALS = [
 // ─── Access codes ────────────────────────────────────────────────────────────
 
 const ACCESS_CODES = [
-  // RMH
+  // RMH — gynaecology, urology, sexual health
   { code: 'KIRA-RMH-GYN1', hospitalCode: 'RMH', specialty: 'Gynecologist' },
   { code: 'KIRA-RMH-GYN2', hospitalCode: 'RMH', specialty: 'Gynecologist' },
   { code: 'KIRA-RMH-URO1', hospitalCode: 'RMH', specialty: 'Urologist' },
-  { code: 'KIRA-RMH-GP01', hospitalCode: 'RMH', specialty: 'General Practitioner' },
   { code: 'KIRA-RMH-SXH1', hospitalCode: 'RMH', specialty: 'Sexual Health Specialist' },
-  // KFH
+  // KFH — urology, gynaecology
   { code: 'KIRA-KFH-URO1', hospitalCode: 'KFH', specialty: 'Urologist' },
-  { code: 'KIRA-KFH-GP01', hospitalCode: 'KFH', specialty: 'General Practitioner' },
-  { code: 'KIRA-KFH-MNT1', hospitalCode: 'KFH', specialty: 'Mental Health Specialist' },
-  // CHUK
-  { code: 'KIRA-CHUK-PED1', hospitalCode: 'CHUK', specialty: 'Pediatrician' },
-  { code: 'KIRA-CHUK-MNT1', hospitalCode: 'CHUK', specialty: 'Mental Health Specialist' },
+  { code: 'KIRA-KFH-GYN1', hospitalCode: 'KFH', specialty: 'Gynecologist' },
+  // CHUK — urology, gynaecology, sexual health
   { code: 'KIRA-CHUK-URO1', hospitalCode: 'CHUK', specialty: 'Urologist' },
-  { code: 'KIRA-CHUK-GP01', hospitalCode: 'CHUK', specialty: 'General Practitioner' },
-  // KGB
-  { code: 'KIRA-KGB-GP01', hospitalCode: 'KGB', specialty: 'General Practitioner' },
-  { code: 'KIRA-KGB-CNS1', hospitalCode: 'KGB', specialty: 'Counselor' },
-  // MSK
-  { code: 'KIRA-MSK-GP01', hospitalCode: 'MSK', specialty: 'General Practitioner' },
+  { code: 'KIRA-CHUK-GYN1', hospitalCode: 'CHUK', specialty: 'Gynecologist' },
+  { code: 'KIRA-CHUK-SXH1', hospitalCode: 'CHUK', specialty: 'Sexual Health Specialist' },
+  // KGB — sexual health, gynaecology
+  { code: 'KIRA-KGB-SXH1', hospitalCode: 'KGB', specialty: 'Sexual Health Specialist' },
+  { code: 'KIRA-KGB-GYN1', hospitalCode: 'KGB', specialty: 'Gynecologist' },
+  // MSK — sexual health
   { code: 'KIRA-MSK-SXH1', hospitalCode: 'MSK', specialty: 'Sexual Health Specialist' },
+  { code: 'KIRA-MSK-URO1', hospitalCode: 'MSK', specialty: 'Urologist' },
 ];
 
 // ─── Doctors ─────────────────────────────────────────────────────────────────
+// Kira works exclusively with gynaecologists, urologists, and sexual health specialists.
 
 const DOCTORS = [
   // ── RMH ──────────────────────────────────────────────────────────────────
@@ -117,7 +115,7 @@ const DOCTORS = [
     specialty: 'Gynecologist',
     department: 'Gynecology',
     hospitalCode: 'RMH',
-    // This is the primary demo login: email sarah.uwase@rmh.gov.rw / KiraDev123!
+    // Primary demo login: sarah.uwase@rmh.gov.rw / KiraDev123!
   },
   {
     fullName: 'Dr. Amina Uwimana',
@@ -128,11 +126,11 @@ const DOCTORS = [
     hospitalCode: 'RMH',
   },
   {
-    fullName: 'Dr. Eric Ntamuhanga',
-    email: 'eric.ntamuhanga@rmh.gov.rw',
-    medicalLicenseId: 'RW-GP-2201',
-    specialty: 'General Practitioner',
-    department: 'General Practice',
+    fullName: 'Dr. Jean-Luc Habimana',
+    email: 'jeanluc.habimana@rmh.gov.rw',
+    medicalLicenseId: 'RW-URO-6680',
+    specialty: 'Urologist',
+    department: 'Urology',
     hospitalCode: 'RMH',
   },
   // ── KFH ──────────────────────────────────────────────────────────────────
@@ -143,21 +141,14 @@ const DOCTORS = [
     specialty: 'Urologist',
     department: 'Urology',
     hospitalCode: 'KFH',
+    // Secondary demo login: moses.gatete@kfh.gov.rw / KiraDev123!
   },
   {
     fullName: 'Dr. Solange Kaneza',
     email: 'solange.kaneza@kfh.gov.rw',
-    medicalLicenseId: 'RW-GP-10485',
-    specialty: 'General Practitioner',
-    department: 'General Practice',
-    hospitalCode: 'KFH',
-  },
-  {
-    fullName: 'Dr. Jean-Pierre Habimana',
-    email: 'jp.habimana@kfh.gov.rw',
-    medicalLicenseId: 'RW-MNT-7720',
-    specialty: 'Mental Health Specialist',
-    department: 'Mental Health',
+    medicalLicenseId: 'RW-GYN-7743',
+    specialty: 'Gynecologist',
+    department: 'Gynecology',
     hospitalCode: 'KFH',
   },
   // ── CHUK ─────────────────────────────────────────────────────────────────
@@ -172,34 +163,18 @@ const DOCTORS = [
   {
     fullName: 'Dr. Claudine Ingabire',
     email: 'claudine.ingabire@chuk.gov.rw',
-    medicalLicenseId: 'RW-PED-6610',
-    specialty: 'Pediatrician',
-    department: 'Pediatrics',
-    hospitalCode: 'CHUK',
-  },
-  {
-    fullName: 'Dr. Patrick Nzeyimana',
-    email: 'patrick.nzeyimana@chuk.gov.rw',
-    medicalLicenseId: 'RW-MNT-9901',
-    specialty: 'Mental Health Specialist',
-    department: 'Mental Health',
+    medicalLicenseId: 'RW-GYN-6610',
+    specialty: 'Gynecologist',
+    department: 'Gynecology',
     hospitalCode: 'CHUK',
   },
   // ── KGB ──────────────────────────────────────────────────────────────────
   {
     fullName: 'Dr. Alice Mukamazimpaka',
     email: 'alice.mukamazimpaka@kgb.gov.rw',
-    medicalLicenseId: 'RW-GP-11272',
-    specialty: 'General Practitioner',
-    department: 'General Practice',
-    hospitalCode: 'KGB',
-  },
-  {
-    fullName: 'Dr. Robert Nkurunziza',
-    email: 'robert.nkurunziza@kgb.gov.rw',
-    medicalLicenseId: 'RW-CNS-4480',
-    specialty: 'Counselor',
-    department: 'Counseling',
+    medicalLicenseId: 'RW-SXH-11272',
+    specialty: 'Sexual Health Specialist',
+    department: 'Sexual Health',
     hospitalCode: 'KGB',
   },
 ];
@@ -218,9 +193,7 @@ const ADMIN = {
 // Each entry: { hospital, doctorEmail(optional), patientName, patientAge, phone,
 //               symptomSummary, escalationReason, severity, status, daysAgoCreated }
 
-function makeEscalations(sarahId, aminaId, ericId, mosesId, emmanuelId) {
-  const now = new Date();
-
+function makeEscalations(sarahId, aminaId, mosesId, emmanuelId, claudineId) {
   return [
     // ── RMH — Active assigned to Sarah (3) ──────────────────────────────
     {
@@ -230,7 +203,7 @@ function makeEscalations(sarahId, aminaId, ericId, mosesId, emmanuelId) {
       patientAge: 34,
       patientPhone: '+250780112233',
       symptomSummary:
-        'Patient reports 3 weeks of lower abdominal discomfort and unusual discharge. Sexual health history disclosed during AI chat. Possible STI, recommends clinical exam and STI panel.',
+        'Patient reports 3 weeks of lower abdominal discomfort and unusual discharge. Sexual health history disclosed during AI chat. Possible STI — clinical exam and STI panel recommended.',
       escalationReason: 'Possible sexually transmitted infection — requires clinical screening',
       severity: 'amber',
       status: 'active',
@@ -239,12 +212,12 @@ function makeEscalations(sarahId, aminaId, ericId, mosesId, emmanuelId) {
     {
       hospital: 'RMH',
       doctorId: sarahId,
-      patientName: 'David N.',
+      patientName: 'Diane N.',
       patientAge: 28,
       patientPhone: '+250780334455',
       symptomSummary:
-        'Patient describes painful urination and groin swelling for 5 days. No prior STI history. AI flags moderate risk — urological or STI evaluation recommended.',
-      escalationReason: 'Dysuria + groin swelling — urological or STI evaluation needed',
+        'Female patient reports painful urination and pelvic discomfort for 5 days, yellowish vaginal discharge. First-time STI concern. AI flags moderate risk — gynaecological and STI evaluation recommended.',
+      escalationReason: 'Pelvic pain + abnormal discharge — gynaecological assessment needed',
       severity: 'amber',
       status: 'active',
       daysAgo: 1,
@@ -256,21 +229,21 @@ function makeEscalations(sarahId, aminaId, ericId, mosesId, emmanuelId) {
       patientAge: 45,
       patientPhone: '+250780556677',
       symptomSummary:
-        'Patient reports recurrent pelvic pain, blood in urine once last week, nocturia 3×/night. AI rates high risk. Urgent urology consult recommended — rule out bladder/prostate pathology.',
-      escalationReason: 'Haematuria + pelvic pain — urgent clinical review',
+        'Male patient reports recurrent pelvic pain and haematuria once last week. AI rates high risk. Urgent urology consult recommended — rule out urological pathology.',
+      escalationReason: 'Haematuria + pelvic pain — urgent urological review',
       severity: 'red',
       status: 'active',
       daysAgo: 2,
     },
-    // ── RMH — Pending (5) ────────────────────────────────────────────────
+    // ── RMH — Pending ────────────────────────────────────────────────────
     {
       hospital: 'RMH',
       patientName: 'Théo K.',
       patientAge: 22,
       patientPhone: '+250780778899',
       symptomSummary:
-        'Young male reporting anxiety about recent unprotected intercourse. AI flagged HIV/STI exposure risk. Patient consented to escalation — counselling and PEP assessment required.',
-      escalationReason: 'Potential HIV/STI exposure — PEP window assessment needed',
+        'Young male reporting anxiety about recent unprotected intercourse within last 48 hours. AI flagged HIV/STI exposure risk. PEP window still open — urgent assessment required.',
+      escalationReason: 'Potential HIV exposure — PEP window assessment needed urgently',
       severity: 'red',
       status: 'pending',
       daysAgo: 0,
@@ -281,8 +254,8 @@ function makeEscalations(sarahId, aminaId, ericId, mosesId, emmanuelId) {
       patientAge: 39,
       patientPhone: '+250780990011',
       symptomSummary:
-        'Patient reports persistent fatigue, low mood and reduced libido over 2 months. AI suggests possible low testosterone or thyroid dysfunction. Endocrine workup recommended.',
-      escalationReason: 'Fatigue + low libido — hormonal panel needed',
+        'Male patient reports persistent erectile dysfunction and significantly reduced libido over 3 months. AI suggests possible low testosterone or vascular cause. Urological and hormonal evaluation recommended.',
+      escalationReason: 'Persistent ED + low libido — urological / hormonal assessment needed',
       severity: 'amber',
       status: 'pending',
       daysAgo: 1,
@@ -293,7 +266,7 @@ function makeEscalations(sarahId, aminaId, ericId, mosesId, emmanuelId) {
       patientAge: 51,
       patientPhone: '+250781122334',
       symptomSummary:
-        'Patient describes burning sensation after sex and white penile discharge for 1 week. First-time STI concern. AI rates amber risk. Clinical STI screening indicated.',
+        'Male patient describes burning sensation after sex and white penile discharge for 1 week. First-time STI concern. AI rates amber risk. Clinical STI screening indicated.',
       escalationReason: 'Penile discharge + burning — STI screening required',
       severity: 'amber',
       status: 'pending',
@@ -301,24 +274,12 @@ function makeEscalations(sarahId, aminaId, ericId, mosesId, emmanuelId) {
     },
     {
       hospital: 'RMH',
-      patientName: 'André M.',
-      patientAge: 33,
-      patientPhone: '+250781334455',
-      symptomSummary:
-        'Patient mentions intermittent chest tightness during exertion, family history of early cardiac events. AI recommends cardiovascular workup — not ignoring somatic symptoms.',
-      escalationReason: 'Exertional chest tightness + family cardiac history',
-      severity: 'amber',
-      status: 'pending',
-      daysAgo: 4,
-    },
-    {
-      hospital: 'RMH',
-      patientName: 'Innocent W.',
-      patientAge: 19,
+      patientName: 'Marie U.',
+      patientAge: 25,
       patientPhone: '+250781556677',
       symptomSummary:
-        'Teenager reporting episodes of extreme sadness and self-isolation over 3 weeks. Disclosed difficulty sleeping and not eating properly. AI flagged emotional crisis pathway.',
-      escalationReason: 'Adolescent emotional crisis — mental health assessment required',
+        'Young female reports irregular periods for 4 months, pelvic pain, and difficulty conceiving after 10 months of trying. AI flagged possible PCOS or other gynaecological cause. Gynaecological evaluation and hormonal panel recommended.',
+      escalationReason: 'Irregular periods + pelvic pain + fertility concern — gynaecological assessment',
       severity: 'amber',
       status: 'pending',
       daysAgo: 0,
@@ -353,12 +314,12 @@ function makeEscalations(sarahId, aminaId, ericId, mosesId, emmanuelId) {
     // ── RMH — Closed (3) ────────────────────────────────────────────────
     {
       hospital: 'RMH',
-      doctorId: ericId,
+      doctorId: aminaId,
       patientName: 'Alain B.',
       patientAge: 29,
       patientPhone: '+250782112233',
-      symptomSummary: 'Patient complained of skin rash on inner thigh. Resolved after antifungal treatment.',
-      escalationReason: 'Groin rash — resolved',
+      symptomSummary: 'Male patient with genital rash and itching — confirmed as genital herpes simplex. Patient counselled on management, antiviral therapy initiated. Follow-up scheduled.',
+      escalationReason: 'Genital rash — herpes simplex confirmed, treatment initiated',
       severity: 'green',
       status: 'closed',
       daysAgo: 14,
@@ -420,8 +381,8 @@ function makeEscalations(sarahId, aminaId, ericId, mosesId, emmanuelId) {
       patientAge: 31,
       patientPhone: '+250783556677',
       symptomSummary:
-        'Patient reports panic attacks and chronic work stress. Unable to sleep well for 3 weeks. AI recommends mental health pathway with anxiety assessment.',
-      escalationReason: 'Panic attacks + work stress — mental health assessment',
+        'Male patient reports inability to achieve erection for the past 4 months. Patient attributes this to stress and fatigue. AI recommends urological evaluation to rule out vascular or hormonal cause.',
+      escalationReason: 'Erectile dysfunction persisting 4 months — urological evaluation needed',
       severity: 'amber',
       status: 'pending',
       daysAgo: 2,
@@ -442,12 +403,12 @@ function makeEscalations(sarahId, aminaId, ericId, mosesId, emmanuelId) {
     },
     {
       hospital: 'CHUK',
-      patientName: 'Josué M.',
-      patientAge: 16,
+      patientName: 'Josiane M.',
+      patientAge: 23,
       patientPhone: '+250784334455',
       symptomSummary:
-        'Adolescent expressing thoughts of self-harm. AI immediately flagged crisis pathway. Very high risk — urgent mental health crisis intervention required.',
-      escalationReason: 'Self-harm ideation — mental health crisis intervention',
+        'Female patient reports severe lower abdominal pain, one-sided, with late period and spotting. AI flagged possible ectopic pregnancy — urgent gynaecological assessment required immediately.',
+      escalationReason: 'Suspected ectopic pregnancy — urgent gynaecological assessment',
       severity: 'red',
       status: 'pending',
       daysAgo: 0,
@@ -458,8 +419,8 @@ function makeEscalations(sarahId, aminaId, ericId, mosesId, emmanuelId) {
       patientAge: 38,
       patientPhone: '+250784556677',
       symptomSummary:
-        'Patient reports persistent cough for 3 weeks, night sweats and weight loss. AI suggests infectious pathology — TB screening required.',
-      escalationReason: 'Cough + night sweats + weight loss — TB screening',
+        'Male patient reports foul-smelling penile discharge and scrotal swelling for 2 weeks. History of unprotected sex with multiple partners. AI suggests gonorrhoea or chlamydia with epididymitis risk.',
+      escalationReason: 'Penile discharge + scrotal swelling — possible epididymitis / STI',
       severity: 'red',
       status: 'pending',
       daysAgo: 1,
@@ -482,110 +443,136 @@ function makeEscalations(sarahId, aminaId, ericId, mosesId, emmanuelId) {
 // ─── Others Have Asked feed ───────────────────────────────────────────────────
 
 const OTHERS_ASKED = [
+  // ── STIs & Testing ─────────────────────────────────────────────────────────
   {
-    question: "I've been feeling exhausted no matter how much I sleep — is this normal?",
+    question: 'I noticed unusual discharge and a burning feeling when I urinate.',
     aiAnswer:
-      "Many men experience persistent fatigue from stress, poor sleep quality, low iron, or thyroid issues. Try keeping a consistent sleep schedule for two weeks and notice if it improves. If you still feel drained, a quick blood test with a GP can rule out something easy to fix.",
-    topic: 'general',
+      "These are common signs of a sexually transmitted infection such as gonorrhoea or chlamydia — both are treatable with antibiotics. Visit a health centre as soon as you can. Testing is confidential. Avoid sexual contact until you have been checked and treated so your partner is also protected.",
+    topic: 'stis-testing',
+    careBadge: 'amber',
+  },
+  {
+    question: 'How do I know if I have an STI if I have no symptoms?',
+    aiAnswer:
+      "Many STIs — including chlamydia and early HIV — cause no obvious symptoms, which is how they spread silently. If you have had unprotected sex with a new or multiple partners, getting tested is the only reliable way to know. Health centres in Rwanda offer confidential testing. Knowing protects both you and your partners.",
+    topic: 'stis-testing',
+    careBadge: 'amber',
+  },
+  {
+    question: 'What happens during an STI test at a health centre in Rwanda?',
+    aiAnswer:
+      "An STI test is simple and confidential. A healthcare worker will take a small urine sample or a swab from the affected area. For HIV, a finger-prick blood test gives results in 15–20 minutes. All testing is free at government health centres and no referral is needed. Results are shared only with you.",
+    topic: 'stis-testing',
     careBadge: 'green',
   },
   {
-    question: "I have headaches almost every day and I'm only 32. Should I worry?",
+    question: 'I have genital sores that come and go. What could this be?',
     aiAnswer:
-      "Daily headaches at your age are often linked to stress, screen time, dehydration, or undiagnosed high blood pressure. Try drinking more water, taking short breaks from screens, and checking your blood pressure at a clinic. If they last more than two weeks, see a doctor.",
-    topic: 'heart-hypertension',
+      "Recurring genital sores are often herpes simplex (HSV-2). They appear as clusters of blisters or ulcers, heal within 1–2 weeks, and return periodically — often triggered by stress. Herpes is very common and manageable, not curable. A doctor can confirm the diagnosis and prescribe antiviral therapy to reduce outbreaks and transmission risk.",
+    topic: 'stis-testing',
     careBadge: 'amber',
   },
+  // ── HIV / PEP / PrEP ───────────────────────────────────────────────────────
   {
-    question: "I feel down most days but I'm scared to talk to anyone about it.",
+    question: 'I may have been exposed to HIV. What should I do immediately?',
     aiAnswer:
-      "What you're feeling matters and reaching out — even here — takes courage. Many men carry this quietly. A short conversation with a counsellor at a local clinic is confidential and can really help. You don't have to face this alone.",
-    topic: 'mental-health',
-    careBadge: 'amber',
-  },
-  {
-    question: 'My urine has been darker than usual for a few days.',
-    aiAnswer:
-      "This often happens with mild dehydration. Try drinking more water for two days. If the colour stays dark, has a reddish tint, or you feel pain when urinating, a doctor can check this quickly with a simple urine test.",
-    topic: 'prostate-urology',
-    careBadge: 'amber',
-  },
-  {
-    question: 'I had unprotected sex last week and I am anxious. What should I do?',
-    aiAnswer:
-      "The right next step is a confidential HIV and STI test at a health centre — Rwanda has free testing at most district hospitals. If it was recent, ask about PEP medication. Whatever the result, you'll know and can act.",
-    topic: 'hiv-stis',
+      "If the exposure happened within the last 72 hours, go to a district hospital or health centre right now and ask for PEP (post-exposure prophylaxis). PEP is free in Rwanda and is highly effective when started quickly. After 72 hours PEP is no longer effective, so timing matters. An HIV test will also be offered.",
+    topic: 'hiv-prep-pep',
     careBadge: 'red',
   },
   {
-    question: 'I get up to urinate three or four times every night. Is this normal at 45?',
+    question: 'I want to protect myself from HIV. Is PrEP available in Rwanda?',
     aiAnswer:
-      "This is common as men age but worth understanding. Cutting fluids two hours before bed often helps. If it persists, a doctor can check your prostate — early checks make later care much easier.",
-    topic: 'prostate-urology',
-    careBadge: 'amber',
-  },
-  {
-    question: 'I have a small rash on my neck that has been there for two weeks.',
-    aiAnswer:
-      "Many neck rashes are caused by irritation, heat, or shaving. Keep the area clean and dry and avoid scented products. If it spreads, itches strongly, or weeps fluid, a doctor can give it a proper look.",
-    topic: 'skin-eye',
+      "Yes — PrEP (pre-exposure prophylaxis for HIV) is available in Rwanda at TRAC Plus facilities and selected health centres including Kibagabaga Hospital. It is highly effective when taken daily. Speak to a healthcare provider about whether it is right for you. Condom use remains important for protection against other STIs.",
+    topic: 'hiv-prep-pep',
     careBadge: 'green',
   },
   {
-    question: 'I had a fever for four days and now I feel weak. Could it be malaria?',
+    question: 'My partner tested positive for HIV. What do I do now?',
     aiAnswer:
-      "Yes, malaria is possible — especially in Rwanda — and a fever lasting four days deserves attention. Visit the nearest health centre for a quick malaria test. Treatment works very well when started early. Don't wait this one out.",
-    topic: 'malaria-fever',
+      "First: if your partner disclosed recently and you have had unprotected sex in the last 72 hours, go to a hospital immediately for PEP — this can prevent transmission if started quickly. Then: get tested yourself. If your test is negative, talk to a doctor about PrEP for ongoing protection. Your partner's status doesn't have to determine yours.",
+    topic: 'hiv-prep-pep',
     careBadge: 'red',
   },
+  // ── Women's Health ─────────────────────────────────────────────────────────
   {
-    question: 'I want to lose weight but I get tired easily. Where do I start?',
+    question: 'I have been having unusual vaginal discharge with a bad smell.',
     aiAnswer:
-      "Start small — a 20-minute walk after dinner, and swapping sweet drinks for water for two weeks. Many men feel a real difference within a month. If the tiredness is unusual, ask a doctor to check your blood sugar and blood pressure.",
-    topic: 'diabetes-nutrition',
+      "Abnormal discharge — especially with a foul or fishy odour — often signals bacterial vaginosis (BV) or an STI. BV is very common and easily treated with antibiotics. If the discharge is also yellowish or green with pelvic pain, it could be an STI. A gynaecologist or sexual health clinic can identify the cause with a simple swab test.",
+    topic: 'womens-health',
+    careBadge: 'amber',
+  },
+  {
+    question: 'Sex has been painful for me lately.',
+    aiAnswer:
+      "Painful sex (dyspareunia) is common but not something to ignore. In women, it is often caused by insufficient lubrication, a vaginal infection, endometriosis, or pelvic inflammatory disease. If it has been going on for more than two weeks, a gynaecologist can identify the cause and offer treatment.",
+    topic: 'womens-health',
+    careBadge: 'amber',
+  },
+  {
+    question: 'My periods have become very irregular in the past few months.',
+    aiAnswer:
+      "Irregular periods are often caused by stress, significant weight changes, thyroid issues, or polycystic ovary syndrome (PCOS). PCOS is the most common hormonal disorder in women of reproductive age — symptoms include irregular periods, excess hair, and difficulty conceiving. A gynaecologist can confirm the diagnosis with a blood test and ultrasound.",
+    topic: 'womens-health',
+    careBadge: 'amber',
+  },
+  {
+    question: 'How often should I have a cervical screening (Pap smear)?',
+    aiAnswer:
+      "Cervical screening (Pap smear) is recommended every 3 years for sexually active women aged 21 and older. It detects early cell changes caused by HPV before they become cancer — catching this early is completely lifesaving. Screening is available at CHUK, King Faisal, Rwanda Military Hospital, and all district hospitals.",
+    topic: 'womens-health',
+    careBadge: 'green',
+  },
+  // ── Men's Health ───────────────────────────────────────────────────────────
+  {
+    question: "I've been having trouble getting or keeping an erection.",
+    aiAnswer:
+      "Erectile difficulties are common and mostly treatable. Stress, fatigue, alcohol, and anxiety are the top causes in younger men. In older men, blood pressure or diabetes can play a role. A urologist can help identify the cause discreetly — this is a medical issue, not a weakness. Persistent ED lasting more than 3 months needs evaluation.",
+    topic: 'mens-health',
+    careBadge: 'amber',
+  },
+  {
+    question: 'I finish too quickly during sex and it is affecting my relationship.',
+    aiAnswer:
+      "Premature ejaculation is one of the most common male sexual concerns — you are not alone. Behavioural techniques (start-stop, squeeze method) help many men significantly. Stress, anxiety, and relationship tension often play a big role. A urologist or sexual health specialist can discuss options discreetly; there is no shame in asking.",
+    topic: 'mens-health',
     careBadge: 'green',
   },
   {
-    question: 'My eyes are red and itchy after working long hours.',
+    question: 'I feel a lump in one of my testicles. Should I be worried?',
     aiAnswer:
-      "Many men get this from screen strain or dry eyes. Try the 20-20-20 rule — every 20 minutes look 20 feet away for 20 seconds — and use lubricating eye drops from a pharmacy. If redness lasts more than a week or vision changes, see a doctor.",
-    topic: 'skin-eye',
+      "Most testicular lumps are benign — cysts or varicoceles — but some need prompt evaluation. Any new testicular lump should be seen by a urologist within a week. Testicular cancer is very treatable when caught early. This is worth getting checked quickly rather than waiting.",
+    topic: 'mens-health',
+    careBadge: 'red',
+  },
+  {
+    question: 'I have penile discharge and pain. What does this mean?',
+    aiAnswer:
+      "Penile discharge combined with pain or burning is a classic sign of gonorrhoea or chlamydia. Both are common and fully treatable with antibiotics. Visit a health centre for a quick STI test — it is confidential and free. Avoid sexual contact until you and your partner(s) have been tested and treated.",
+    topic: 'mens-health',
+    careBadge: 'amber',
+  },
+  // ── Contraception ──────────────────────────────────────────────────────────
+  {
+    question: 'What contraception options are available for free in Rwanda?',
+    aiAnswer:
+      "Rwanda offers several free contraceptive methods at all health centres: condoms, combined oral contraceptive pills, the injectable (Depo-Provera, every 3 months), the implant (3 years), and the IUD (5–10 years). Emergency contraception (morning-after pill) is available within 72 hours at pharmacies. A nurse can help you choose the best option for you.",
+    topic: 'contraception',
     careBadge: 'green',
   },
   {
-    question: "I've been having trouble getting or keeping an erection. What could cause this?",
+    question: 'I had unprotected sex. Is there something I can take to prevent pregnancy?',
     aiAnswer:
-      "Erectile difficulties are common and mostly treatable. Stress, fatigue, alcohol, and anxiety are the top causes in younger men. In older men, blood pressure or blood sugar can play a role. A doctor can help identify the cause discreetly — this is a medical issue, not a weakness.",
-    topic: 'prostate-urology',
+      "Yes — emergency contraception (the morning-after pill) can prevent pregnancy if taken within 72 hours of unprotected sex, with maximum effectiveness in the first 24 hours. It is available at pharmacies across Rwanda without a prescription. It is safe to use but not intended as regular contraception.",
+    topic: 'contraception',
     careBadge: 'amber',
   },
   {
-    question: 'I feel a lump in one of my testicles. Should I panic?',
+    question: 'I want a long-term contraception method. What should I consider?',
     aiAnswer:
-      "Most testicular lumps are benign — cysts or varicoceles — but some need prompt evaluation. Don't wait more than a week before seeing a doctor. Testicular cancer is very treatable when caught early. This is worth getting checked quickly.",
-    topic: 'prostate-urology',
-    careBadge: 'red',
-  },
-  {
-    question: 'I drink alcohol every day to relax. Is that a problem?',
-    aiAnswer:
-      "Daily alcohol use does affect sleep quality, blood pressure, and mood — often making stress worse over time. Many men use it to cope. A counsellor or GP can help find what's underneath that without judgement. You don't have to stop overnight.",
-    topic: 'mental-health',
-    careBadge: 'amber',
-  },
-  {
-    question: 'How do I know if I have high blood pressure without a machine?',
-    aiAnswer:
-      "You often can't — high blood pressure rarely causes symptoms, which is why it's called a silent killer. The only way to know is to get it measured. Most pharmacies and health centres in Rwanda can check it for free. If you haven't checked in over a year, go today.",
-    topic: 'heart-hypertension',
-    careBadge: 'amber',
-  },
-  {
-    question: 'I have been avoiding people and feel worthless. Is this depression?',
-    aiAnswer:
-      "What you're describing — withdrawing, feeling worthless — are real symptoms that deserve attention. Many men push through alone and it gets harder. Speaking to a counsellor or mental health specialist is the single most effective first step. You deserve support.",
-    topic: 'mental-health',
-    careBadge: 'red',
+      "The best long-term options are the implant (inserted under the skin, effective 3 years) and the IUD (inserted into the uterus, effective 5–10 years). Both are over 99% effective and reversible. They are free at government health centres. A gynaecologist or trained nurse will help you decide which fits your health and lifestyle.",
+    topic: 'contraception',
+    careBadge: 'green',
   },
 ];
 
@@ -672,13 +659,13 @@ async function main() {
 
   const sarah    = doctorMap.get('sarah.uwase@rmh.gov.rw');
   const amina    = doctorMap.get('amina.uwimana@rmh.gov.rw');
-  const eric     = doctorMap.get('eric.ntamuhanga@rmh.gov.rw');
   const moses    = doctorMap.get('moses.gatete@kfh.gov.rw');
   const emmanuel = doctorMap.get('emmanuel.mugisha@chuk.gov.rw');
+  const claudine = doctorMap.get('claudine.ingabire@chuk.gov.rw');
 
   // ── 4. Escalations ────────────────────────────────────────────────────────
   console.log('\n→ Escalations…');
-  const escalationDefs = makeEscalations(sarah.id, amina.id, eric.id, moses.id, emmanuel.id);
+  const escalationDefs = makeEscalations(sarah.id, amina.id, moses.id, emmanuel.id, claudine.id);
   const escalationRecords = [];
 
   for (const e of escalationDefs) {
@@ -856,8 +843,8 @@ async function main() {
     { doctorId: sarah.id,    event: 'note_created',   ipAddress: '41.186.21.10', daysAgo: 1 },
     { doctorId: amina.id,    event: 'login',          ipAddress: '41.186.22.15', daysAgo: 0 },
     { doctorId: amina.id,    event: 'case_opened',    ipAddress: '41.186.22.15', daysAgo: 0 },
-    { doctorId: eric.id,     event: 'login',          ipAddress: '41.186.25.44', daysAgo: 3 },
-    { doctorId: eric.id,     event: 'case_closed',    ipAddress: '41.186.25.44', daysAgo: 3 },
+    { doctorId: claudine.id, event: 'login',          ipAddress: '41.186.25.44', daysAgo: 3 },
+    { doctorId: claudine.id, event: 'case_closed',    ipAddress: '41.186.25.44', daysAgo: 3 },
     { doctorId: moses.id,    event: 'login',          ipAddress: '41.186.30.71', daysAgo: 1 },
     { doctorId: moses.id,    event: 'case_opened',    ipAddress: '41.186.30.71', daysAgo: 1 },
     { doctorId: emmanuel.id, event: 'login',          ipAddress: '41.186.45.9',  daysAgo: 2 },
@@ -900,16 +887,17 @@ async function main() {
   console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
   console.log('  Demo login credentials (all passwords: KiraDev123!)');
   console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
-  console.log('  sarah.uwase@rmh.gov.rw   → Dr. Sarah Uwase, Gynecologist @ RMH');
-  console.log('  amina.uwimana@rmh.gov.rw → Dr. Amina Uwimana, Sexual Health @ RMH');
-  console.log('  moses.gatete@kfh.gov.rw  → Dr. Moses Gatete, Urologist @ KFH');
-  console.log('  admin@kirainitiative.rw  → Admin');
+  console.log('  sarah.uwase@rmh.gov.rw      → Dr. Sarah Uwase, Gynecologist @ RMH');
+  console.log('  amina.uwimana@rmh.gov.rw    → Dr. Amina Uwimana, Sexual Health Specialist @ RMH');
+  console.log('  moses.gatete@kfh.gov.rw     → Dr. Moses Gatete, Urologist @ KFH');
+  console.log('  emmanuel.mugisha@chuk.gov.rw→ Dr. Emmanuel Mugisha, Urologist @ CHUK');
+  console.log('  admin@kirainitiative.rw     → Admin');
   console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
   console.log('  Sample access codes:');
   console.log('  KIRA-RMH-GYN1  → RMH / Gynecologist');
-  console.log('  KIRA-RMH-URO1  → RMH / Urologist');
+  console.log('  KIRA-RMH-SXH1  → RMH / Sexual Health Specialist');
   console.log('  KIRA-KFH-URO1  → KFH / Urologist');
-  console.log('  KIRA-CHUK-MNT1 → CHUK / Mental Health Specialist');
+  console.log('  KIRA-CHUK-URO1 → CHUK / Urologist');
   console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n');
 }
 

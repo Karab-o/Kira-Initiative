@@ -4,8 +4,6 @@ import Onboarding from './screens/Onboarding.jsx';
 import Home from './screens/Home.jsx';
 import SessionStart from './screens/SessionStart.jsx';
 import Chat from './screens/Chat.jsx';
-import Scan from './screens/Scan.jsx';
-import ScanLocked from './screens/ScanLocked.jsx';
 import EscalationConsent from './screens/EscalationConsent.jsx';
 import DoctorConnection from './screens/DoctorConnection.jsx';
 import ConsultationChat from './screens/ConsultationChat.jsx';
@@ -27,8 +25,6 @@ export default function PatientApp() {
         <Route path="home" element={<Home />} />
         <Route path="session" element={<SessionStart />} />
         <Route path="chat" element={<Chat />} />
-        <Route path="scan" element={<Scan />} />
-        <Route path="scan-locked" element={<ScanLocked />} />
         <Route path="escalation" element={<EscalationConsent />} />
         <Route path="doctor-connect" element={<DoctorConnection />} />
         <Route path="consultation" element={<ConsultationChat />} />

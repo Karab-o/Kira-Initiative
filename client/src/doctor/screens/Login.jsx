@@ -1,40 +1,11 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Lock, ShieldCheck, Stethoscope, Building2, KeyRound, User, CreditCard } from 'lucide-react';
+import { Lock, ShieldCheck, Stethoscope, KeyRound, User } from 'lucide-react';
 import Button from '../../components/ui/Button.jsx';
-import { Input, Select } from '../../components/ui/Input.jsx';
+import { Input } from '../../components/ui/Input.jsx';
 import { useAuth } from '../../hooks/useAuth.js';
 
-const HOSPITALS = [
-  { id: '', name: 'Select your hospital…' },
-  { id: 'kfh',    name: 'King Faisal Hospital' },
-  { id: 'rmh',    name: 'Rwanda Military Hospital' },
-  { id: 'chuk',   name: 'CHUK (University Teaching Hospital)' },
-  { id: 'legacy', name: 'Legacy Clinics' },
-  { id: 'kigali', name: 'Kigali University Teaching Hospital' },
-];
-
-const SPECIALTIES = [
-  { id: '', label: 'Select your specialty…' },
-  { id: 'gp',           label: 'General Practitioner' },
-  { id: 'gynecologist', label: 'Gynecologist' },
-  { id: 'urologist',    label: 'Urologist' },
-  { id: 'mental',       label: 'Mental Health Specialist' },
-  { id: 'sexual',       label: 'Sexual Health Specialist' },
-  { id: 'counselor',    label: 'Counselor' },
-  { id: 'pediatrician', label: 'Pediatrician' },
-];
-
-const SPECIALTY_HINT = {
-  gp:           'You will receive general health escalations.',
-  gynecologist: 'You will receive reproductive & female sexual health escalations.',
-  urologist:    'You will receive male urinary & reproductive escalations.',
-  mental:       'You will receive emotional crisis & mental health escalations.',
-  sexual:       'You will receive sexual health escalations across all genders.',
-  counselor:    'You will receive emotional support & counseling escalations.',
-  pediatrician: 'You will receive paediatric health escalations.',
-};
 
 export default function Login() {
   const navigate = useNavigate();
@@ -42,7 +13,7 @@ export default function Login() {
 
   const [step, setStep]       = useState('credentials'); // 'credentials' | '2fa'
   const [form, setForm]       = useState({
-    email: '', fullName: '', medicalId: '', hospitalId: '', specialty: '',
+    email: '', medicalId: '',
     accessCode: '', password: '', twoFAToken: '',
   });
   const [error, setError]     = useState(null);
@@ -54,8 +25,6 @@ export default function Login() {
     e.preventDefault();
     setError(null);
 
-    if (!form.hospitalId)  return setError('Please select your hospital.');
-    if (!form.specialty)   return setError('Please select your specialty.');
     if (!form.accessCode)  return setError('Doctor access code is required.');
 
     setLoading(true);
@@ -201,38 +170,6 @@ export default function Login() {
                     autoComplete="off"
                     hint="Optional — or sign in with email only"
                   />
-                  <Select
-                    label="Hospital"
-                    value={form.hospitalId}
-                    onChange={set('hospitalId')}
-                    required
-                  >
-                    {HOSPITALS.map((h) => (
-                      <option key={h.id} value={h.id} disabled={!h.id}>{h.name}</option>
-                    ))}
-                  </Select>
-                  <div>
-                    <Select
-                      label="Specialty"
-                      value={form.specialty}
-                      onChange={set('specialty')}
-                      required
-                    >
-                      {SPECIALTIES.map((s) => (
-                        <option key={s.id} value={s.id} disabled={!s.id}>{s.label}</option>
-                      ))}
-                    </Select>
-                    {form.specialty && SPECIALTY_HINT[form.specialty] && (
-                      <motion.p
-                        initial={{ opacity: 0, height: 0 }}
-                        animate={{ opacity: 1, height: 'auto' }}
-                        className="mt-2 text-[12px] text-sage-500 flex items-start gap-1.5"
-                      >
-                        <Stethoscope size={11} className="mt-0.5 flex-shrink-0" />
-                        {SPECIALTY_HINT[form.specialty]}
-                      </motion.p>
-                    )}
-                  </div>
                 </div>
 
                 {/* Credentials */}

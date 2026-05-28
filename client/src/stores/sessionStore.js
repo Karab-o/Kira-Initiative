@@ -8,8 +8,7 @@ export const useSessionStore = create((set, get) => ({
   sessionToken: null,
   messages: [],
   currentTopic: null,
-  isSexualHealth: false,
-  scanLocked: false,
+  isSexualHealth: true, // always true — Kira is a sexual health platform
   severityLevel: 'green',
   language: 'en',
   isTyping: false,
@@ -23,8 +22,7 @@ export const useSessionStore = create((set, get) => ({
     sessionToken: session.sessionToken,
     language: session.language || 'en',
     severityLevel: session.severityLevel || 'green',
-    scanLocked: !!session.scanLocked,
-    isSexualHealth: !!session.isSexualHealth,
+    isSexualHealth: true,
     messages: [],
     escalation: null,
     consultationId: null,
@@ -35,8 +33,7 @@ export const useSessionStore = create((set, get) => ({
     sessionToken: null,
     messages: [],
     currentTopic: null,
-    isSexualHealth: false,
-    scanLocked: false,
+    isSexualHealth: true,
     severityLevel: 'green',
     consultationId: null,
     escalation: null,
@@ -58,9 +55,7 @@ export const useSessionStore = create((set, get) => ({
   applyClassifier: (c) => set((s) => ({
     currentTopic: c.topic ?? s.currentTopic,
     severityLevel: c.severity ?? s.severityLevel,
-    // Permanent locks — once true, stay true
-    isSexualHealth: s.isSexualHealth || !!c.isSexualHealth,
-    scanLocked: s.scanLocked || !!c.isSexualHealth || !!c.scanLocked,
+    isSexualHealth: true, // always true on this platform
   })),
 
   setEscalation: (escalation) => set({ escalation }),

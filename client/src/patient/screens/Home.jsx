@@ -39,10 +39,10 @@ export default function Home() {
           className="mb-8"
         >
           <h1 className="font-display font-bold text-[28px] leading-tight text-coal mb-3">
-            Private support when you need it most
+            Private sexual health support
           </h1>
           <p className="text-coal-muted text-[15px] leading-relaxed">
-            No account. No history. No judgment. Just clear answers from someone built to listen.
+            For women and men. No account, no judgment. Ask Kira anything about your sexual health — confidentially.
           </p>
         </motion.div>
 

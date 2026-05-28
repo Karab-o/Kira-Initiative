@@ -56,7 +56,6 @@ export default function PatientCase() {
   };
 
   const buildSummaryObj = (text) => {
-    // The handoff summary was concatenated text on the patient side; reconstruct a display object.
     if (!text) return null;
     const lines = text.split(/\n+/);
     return {
@@ -77,12 +76,12 @@ export default function PatientCase() {
   return (
     <div className="space-y-6">
       <div className="flex items-center gap-3">
-        <button onClick={() => navigate('/doctor/dashboard')} className="text-muted-fg hover:text-white">
+        <button onClick={() => navigate('/doctor/dashboard')} className="text-coal-muted hover:text-coal transition">
           <ArrowLeft size={18} />
         </button>
         <div className="flex-1">
-          <h1 className="font-display text-2xl text-white leading-tight">Patient case</h1>
-          <p className="text-xs text-muted-fg">Opened {new Date(escalation.createdAt).toLocaleString()}</p>
+          <h1 className="font-display text-2xl text-coal leading-tight">Patient case</h1>
+          <p className="text-xs text-coal-muted">Opened {new Date(escalation.createdAt).toLocaleString()}</p>
         </div>
         <RiskBadge value={escalation.severityAtEscalation} />
       </div>
@@ -91,31 +90,31 @@ export default function PatientCase() {
         <div className="lg:col-span-2 space-y-5">
           <AISummaryCard summary={summary} />
 
-          <div className="card-ink">
-            <p className="text-xs font-mono uppercase tracking-wider text-muted-fg mb-3">Escalation reason</p>
-            <p className="text-sm text-white leading-relaxed">{escalation.escalationReason}</p>
+          <div className="card p-4">
+            <p className="text-xs font-mono uppercase tracking-wider text-coal-muted mb-3">Escalation reason</p>
+            <p className="text-sm text-coal leading-relaxed">{escalation.escalationReason}</p>
           </div>
 
-          <div className="card-ink !bg-mint-300/5 !border-mint-300/20">
+          <div className="card p-4 !bg-sage-50 !border-sage-100">
             <div className="flex items-start gap-3">
-              <ShieldCheck className="text-mint-300 flex-shrink-0 mt-0.5" size={18} />
+              <ShieldCheck className="text-sage-500 flex-shrink-0 mt-0.5" size={18} />
               <div>
-                <p className="text-sm font-medium text-white">Anonymous AI chat is not shown</p>
-                <p className="text-xs text-muted-fg mt-1">Only the structured summary above is shared with you. The full chat stays private to the patient.</p>
+                <p className="text-sm font-medium text-coal">Anonymous AI chat is not shown</p>
+                <p className="text-xs text-coal-muted mt-1">Only the structured summary above is shared with you. The full chat stays private to the patient.</p>
               </div>
             </div>
           </div>
         </div>
 
         <aside className="space-y-5">
-          <div className="card-ink">
+          <div className="card p-4">
             <div className="flex items-center gap-3 mb-4">
-              <div className="w-10 h-10 rounded-xl bg-mint-300/15 border border-mint-300/25 flex items-center justify-center">
-                <User className="text-mint-300" size={18} />
+              <div className="w-10 h-10 rounded-xl bg-sage-100 border border-sage-200 flex items-center justify-center">
+                <User className="text-sage-500" size={18} />
               </div>
               <div>
-                <p className="text-sm font-medium text-white">{escalation.patientName}, {escalation.patientAge}</p>
-                <p className="text-xs text-muted-fg">{escalation.hospital?.name}</p>
+                <p className="text-sm font-medium text-coal">{escalation.patientName}, {escalation.patientAge}</p>
+                <p className="text-xs text-coal-muted">{escalation.hospital?.name}</p>
               </div>
             </div>
             <a href={`tel:${escalation.patientPhone}`} className="btn-ghost w-full">
@@ -123,8 +122,8 @@ export default function PatientCase() {
             </a>
           </div>
 
-          <div className="card-ink">
-            <p className="text-xs font-mono uppercase tracking-wider text-muted-fg mb-3">Risk level</p>
+          <div className="card p-4">
+            <p className="text-xs font-mono uppercase tracking-wider text-coal-muted mb-3">Risk level</p>
             <div className="grid grid-cols-2 gap-2 mb-3">
               {['low', 'medium', 'high', 'critical'].map((lv) => (
                 <button
@@ -132,8 +131,8 @@ export default function PatientCase() {
                   onClick={() => saveRisk(lv)}
                   className={`px-3 py-2 rounded-lg text-xs font-medium capitalize border transition ${
                     risk === lv
-                      ? 'border-ember-500/60 bg-ember-500/10 text-white'
-                      : 'border-mint-300/15 bg-ink-800 text-muted-fg hover:border-mint-300/40'
+                      ? 'border-sage-500 bg-sage-50 text-coal shadow-sm'
+                      : 'border-border-soft bg-surface-soft text-coal-muted hover:border-sage-300'
                   }`}
                 >
                   {lv}

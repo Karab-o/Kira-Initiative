@@ -46,32 +46,32 @@ export default function SecurityLogs() {
   return (
     <div className="space-y-7 max-w-5xl">
       <div>
-        <h1 className="font-display text-3xl text-white mb-1">Security & verifications</h1>
-        <p className="text-sm text-muted-fg">Review pending doctor applications and inspect security events.</p>
+        <h1 className="font-display text-3xl text-coal mb-1">Security & verifications</h1>
+        <p className="text-sm text-coal-muted">Review pending doctor applications and inspect security events.</p>
       </div>
 
       {error && <p className="text-sm text-care-red">{error}</p>}
 
       <section>
-        <h2 className="font-display text-lg mb-3 text-white">Pending verifications ({pendingDoctors.length})</h2>
+        <h2 className="font-display text-lg text-coal mb-3">Pending verifications ({pendingDoctors.length})</h2>
         {pendingDoctors.length === 0 ? (
-          <p className="text-sm text-muted-fg">No pending applications.</p>
+          <p className="text-sm text-coal-muted">No pending applications.</p>
         ) : (
           <div className="space-y-2">
             {pendingDoctors.map((d) => (
-              <div key={d.id} className="card-ink !p-4 flex items-center gap-4">
+              <div key={d.id} className="card !p-4 flex items-center gap-4">
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-white truncate">{d.fullName}</p>
-                  <p className="text-xs text-muted-fg truncate">{d.email} · {d.specialty} · {d.hospital?.name}</p>
-                  <p className="text-xs text-muted-fg font-mono mt-1">License: {d.medicalLicenseId}</p>
+                  <p className="text-sm font-medium text-coal truncate">{d.fullName}</p>
+                  <p className="text-xs text-coal-muted truncate">{d.email} · {d.specialty} · {d.hospital?.name}</p>
+                  <p className="text-xs text-coal-muted font-mono mt-1">License: {d.medicalLicenseId}</p>
                 </div>
                 {d.licenseFilePath && (
-                  <a href={d.licenseFilePath} target="_blank" rel="noreferrer" className="text-xs text-mint-200 hover:underline">View license</a>
+                  <a href={d.licenseFilePath} target="_blank" rel="noreferrer" className="text-xs text-sage-500 hover:text-sage-600 hover:underline transition">View license</a>
                 )}
-                <button onClick={() => verify(d.id, 'approved')} className="px-3 py-1.5 rounded-lg text-xs bg-care-green/20 text-care-green border border-care-green/30 hover:bg-care-green/30">
+                <button onClick={() => verify(d.id, 'approved')} className="px-3 py-1.5 rounded-lg text-xs bg-care-green/20 text-care-green border border-care-green/30 hover:bg-care-green/30 transition">
                   Approve
                 </button>
-                <button onClick={() => verify(d.id, 'rejected')} className="px-3 py-1.5 rounded-lg text-xs bg-care-red/20 text-care-red border border-care-red/30 hover:bg-care-red/30">
+                <button onClick={() => verify(d.id, 'rejected')} className="px-3 py-1.5 rounded-lg text-xs bg-care-red/20 text-care-red border border-care-red/30 hover:bg-care-red/30 transition">
                   Reject
                 </button>
               </div>
@@ -81,14 +81,14 @@ export default function SecurityLogs() {
       </section>
 
       <section>
-        <h2 className="font-display text-lg mb-3 text-white">Recent security events</h2>
+        <h2 className="font-display text-lg text-coal mb-3">Recent security events</h2>
         {logs.length === 0 ? (
-          <p className="text-sm text-muted-fg">No events to show.</p>
+          <p className="text-sm text-coal-muted">No events to show.</p>
         ) : (
-          <div className="card-ink !p-0 overflow-hidden">
+          <div className="card !p-0 overflow-hidden">
             <table className="w-full text-sm">
-              <thead className="text-xs text-muted-fg font-mono uppercase">
-                <tr className="border-b border-mint-300/10">
+              <thead className="text-xs text-coal-muted font-mono uppercase">
+                <tr className="border-b border-border">
                   <th className="text-left px-4 py-3">When</th>
                   <th className="text-left px-4 py-3">Event</th>
                   <th className="text-left px-4 py-3">IP</th>
@@ -97,16 +97,16 @@ export default function SecurityLogs() {
               </thead>
               <tbody>
                 {logs.map((l) => (
-                  <tr key={l.id} className="border-b border-mint-300/5 last:border-0">
-                    <td className="px-4 py-3 text-xs text-muted-fg font-mono">{new Date(l.createdAt).toLocaleString()}</td>
+                  <tr key={l.id} className="border-b border-border-soft last:border-0">
+                    <td className="px-4 py-3 text-xs text-coal-muted font-mono">{new Date(l.createdAt).toLocaleString()}</td>
                     <td className="px-4 py-3">
                       <Badge tone={SUSPECT.has(l.event) ? 'amber' : 'mint'} dot={SUSPECT.has(l.event)}>
                         {SUSPECT.has(l.event) && <AlertTriangle size={10} />}
                         {l.event}
                       </Badge>
                     </td>
-                    <td className="px-4 py-3 text-xs text-muted-fg font-mono">{l.ipAddress || '—'}</td>
-                    <td className="px-4 py-3 text-xs text-muted-fg max-w-xs truncate font-mono">{l.metadata ? JSON.stringify(l.metadata) : '—'}</td>
+                    <td className="px-4 py-3 text-xs text-coal-muted font-mono">{l.ipAddress || '—'}</td>
+                    <td className="px-4 py-3 text-xs text-coal-muted max-w-xs truncate font-mono">{l.metadata ? JSON.stringify(l.metadata) : '—'}</td>
                   </tr>
                 ))}
               </tbody>

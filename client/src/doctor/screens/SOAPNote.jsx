@@ -65,12 +65,12 @@ export default function SOAPNote() {
   return (
     <div className="space-y-5 max-w-3xl">
       <div className="flex items-center gap-3">
-        <button onClick={() => navigate(`/doctor/consultation/${consultationId}`)} className="text-muted-fg hover:text-white">
+        <button onClick={() => navigate(`/doctor/consultation/${consultationId}`)} className="text-coal-muted hover:text-coal transition">
           <ArrowLeft size={18} />
         </button>
         <div className="flex-1">
-          <h1 className="font-display text-2xl text-white leading-tight">SOAP note</h1>
-          <p className="text-xs text-muted-fg">
+          <h1 className="font-display text-2xl text-coal leading-tight">SOAP note</h1>
+          <p className="text-xs text-coal-muted">
             {savedAt ? `Saved ${savedAt.toLocaleTimeString()}` : finalized ? 'Finalized' : 'Draft'}
           </p>
         </div>
@@ -79,12 +79,12 @@ export default function SOAPNote() {
 
       <form onSubmit={save} className="space-y-5">
         {FIELDS.map((f) => (
-          <div key={f.key} className="card-ink">
+          <div key={f.key} className="card p-4">
             <div className="flex items-baseline justify-between mb-1">
-              <p className="font-display text-lg">{f.label}</p>
-              <p className="text-[11px] text-muted-fg font-mono uppercase tracking-wider">{f.key[0].toUpperCase()}</p>
+              <p className="font-display text-lg text-coal">{f.label}</p>
+              <p className="text-[11px] text-coal-muted font-mono uppercase tracking-wider">{f.key[0].toUpperCase()}</p>
             </div>
-            <p className="text-xs text-muted-fg mb-3">{f.hint}</p>
+            <p className="text-xs text-coal-muted mb-3">{f.hint}</p>
             <TextArea
               value={form[f.key]}
               onChange={(e) => setForm({ ...form, [f.key]: e.target.value })}
@@ -96,7 +96,7 @@ export default function SOAPNote() {
 
         {error && <p className="text-sm text-care-red">{error}</p>}
 
-        <div className="flex gap-3 sticky bottom-3 bg-ink-950/80 backdrop-blur px-2 py-3 -mx-2 rounded-xl">
+        <div className="flex gap-3 sticky bottom-3 bg-white/95 backdrop-blur px-2 py-3 -mx-2 rounded-xl border border-border shadow-sm">
           <Button type="submit" variant="ghost" disabled={finalized} loading={saving} className="flex-1">
             <Save size={14} /> Save draft
           </Button>

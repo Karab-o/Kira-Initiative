@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Lock, MessageCircle, UserRound } from 'lucide-react';
+import { Lock, MessageCircle, Stethoscope } from 'lucide-react';
 import MobileFrame from '../../components/layout/MobileFrame.jsx';
 import Button from '../../components/ui/Button.jsx';
 import { useSessionStore } from '../../stores/sessionStore.js';
@@ -12,21 +12,21 @@ const SLIDES = [
     bg: 'bg-sage-100',
     fg: 'text-sage-500',
     title: 'Your privacy is sacred',
-    body: 'Anonymous sessions. No account, no history, no judgment. When you close the tab, the conversation ends — for good.',
+    body: 'Anonymous sessions. No account, no history, no judgment. When you close the tab, the conversation ends — for good. No one can trace it back to you.',
   },
   {
     icon: MessageCircle,
     bg: 'bg-sage-100',
     fg: 'text-sage-500',
-    title: 'AI guidance, human care',
-    body: 'Chat about anything — sexual health, stress, pain, sleep. Kira can also analyse a photo of your face, eyes, neck or mouth.',
+    title: 'Sexual health, openly',
+    body: 'Chat about STIs, contraception, discharge, pain, sexual function, HIV exposure, fertility — anything. Kira is knowledgeable, discreet, and judgment-free for both women and men.',
   },
   {
-    icon: UserRound,
+    icon: Stethoscope,
     bg: 'bg-sage-100',
     fg: 'text-sage-500',
-    title: 'Real doctors when you need them',
-    body: 'If something needs a doctor, Kira connects you to verified clinicians in Rwanda — your AI chat history stays private.',
+    title: 'Real specialists when you need them',
+    body: 'If your concern needs a doctor, Kira connects you to verified gynaecologists or urologists in Rwanda. Your AI chat stays private — only a brief clinical summary is shared.',
   },
 ];
 

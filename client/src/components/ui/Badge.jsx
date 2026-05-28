@@ -7,9 +7,7 @@ const tones = {
   red:      'bg-care-red-bg text-care-red border-care-red/30',
   critical: 'bg-care-critical/10 text-care-critical border-care-critical/30',
   neutral:  'bg-surface-muted text-coal-muted border-[#E5DDD7]',
-  // legacy dark
-  mint:     'bg-mint-300/15 text-mint-200 border-mint-300/25',
-  ember:    'bg-ember-500/15 text-ember-200 border-ember-400/30',
+  ember:    'bg-ember-500/15 text-ember-400 border-ember-400/30',
 };
 
 const dotColors = {
@@ -19,7 +17,6 @@ const dotColors = {
   red:      'bg-care-red',
   critical: 'bg-care-critical',
   neutral:  'bg-coal-muted',
-  mint:     'bg-mint-300',
   ember:    'bg-ember-400',
 };
 

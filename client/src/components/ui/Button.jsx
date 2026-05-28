@@ -5,10 +5,7 @@ const variants = {
   soft:    'bg-sage-100 hover:bg-sage-200 text-sage-600',
   ghost:   'bg-transparent border-[1.5px] border-[#E5DDD7] hover:border-sage-300 hover:bg-sage-50 text-coal',
   danger:  'bg-care-red hover:opacity-90 text-white',
-  // legacy dark variants
   ember:   'bg-ember-500 hover:bg-ember-600 text-white shadow-ember',
-  ink:     'bg-ink-700 hover:bg-ink-600 text-white border border-mint-300/10',
-  mint:    'bg-mint-500 hover:bg-mint-600 text-white',
 };
 
 const sizes = {

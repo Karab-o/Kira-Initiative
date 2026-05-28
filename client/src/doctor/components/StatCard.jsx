@@ -1,25 +1,26 @@
 import { cn } from '../../lib/cn.js';
 
-export default function StatCard({ label, value, hint, icon: Icon, tone = 'mint' }) {
+export default function StatCard({ label, value, hint, icon: Icon, tone = 'sage' }) {
   const toneClass = {
-    mint:  'text-mint-300 bg-mint-300/10 border-mint-300/20',
-    ember: 'text-ember-400 bg-ember-500/10 border-ember-400/30',
+    sage:  'text-sage-500 bg-sage-100 border-sage-200',
+    ember: 'text-care-amber bg-care-amber-bg border-care-amber/30',
     amber: 'text-care-amber bg-care-amber-bg border-care-amber/30',
     red:   'text-care-red bg-care-red-bg border-care-red/30',
-  }[tone];
+    green: 'text-care-green bg-care-green/10 border-care-green/30',
+  }[tone] ?? 'text-sage-500 bg-sage-100 border-sage-200';
 
   return (
-    <div className="card-ink">
+    <div className="card p-4">
       <div className="flex items-center justify-between mb-3">
-        <p className="text-xs uppercase tracking-wider font-mono text-muted-fg">{label}</p>
+        <p className="text-xs uppercase tracking-wider font-mono text-coal-muted">{label}</p>
         {Icon && (
           <div className={cn('w-8 h-8 rounded-lg border flex items-center justify-center', toneClass)}>
             <Icon size={15} />
           </div>
         )}
       </div>
-      <p className="font-display text-3xl text-white leading-none">{value}</p>
-      {hint && <p className="text-xs text-muted-fg mt-2">{hint}</p>}
+      <p className="font-display text-3xl text-coal leading-none">{value}</p>
+      {hint && <p className="text-xs text-coal-muted mt-2">{hint}</p>}
     </div>
   );
 }

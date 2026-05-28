@@ -77,41 +77,41 @@ export default function Consultation() {
   return (
     <div className="space-y-4">
       <div className="flex items-center gap-3">
-        <button onClick={() => navigate(`/doctor/case/${consultation.escalation.id}`)} className="text-muted-fg hover:text-white">
+        <button onClick={() => navigate(`/doctor/case/${consultation.escalation.id}`)} className="text-coal-muted hover:text-coal transition">
           <ArrowLeft size={18} />
         </button>
         <div className="flex-1">
-          <h1 className="font-display text-2xl text-white leading-tight">{consultation.escalation.patientName}</h1>
-          <p className="text-xs text-muted-fg">{consultation.escalation.hospital?.name} · age {consultation.escalation.patientAge}</p>
+          <h1 className="font-display text-2xl text-coal leading-tight">{consultation.escalation.patientName}</h1>
+          <p className="text-xs text-coal-muted">{consultation.escalation.hospital?.name} · age {consultation.escalation.patientAge}</p>
         </div>
         <RiskBadge value={consultation.riskLevel || consultation.escalation.severityAtEscalation} />
-        <Link to={`/doctor/consultation/${consultationId}/soap`} className="btn-mint">
+        <Link to={`/doctor/consultation/${consultationId}/soap`} className="btn-primary">
           <NotebookPen size={14} /> SOAP
         </Link>
       </div>
 
       <div className="grid grid-cols-1 xl:grid-cols-12 gap-4">
-        {/* Left: case summary (collapsible on mobile) */}
-        <aside className="xl:col-span-3 card-ink">
-          <p className="text-xs font-mono uppercase tracking-wider text-muted-fg mb-3">Concern</p>
-          <p className="text-sm text-white leading-relaxed mb-4">{consultation.escalation.escalationReason}</p>
-          <div className="border-t border-mint-300/10 pt-4 space-y-2 text-xs text-muted-fg">
-            <p><span className="text-white">Severity:</span> {consultation.escalation.severityAtEscalation}</p>
-            <p><span className="text-white">Status:</span> {consultation.status}</p>
-            <p><span className="text-white">Phone:</span> {consultation.escalation.patientPhone}</p>
+        {/* Left: case summary */}
+        <aside className="xl:col-span-3 card p-4">
+          <p className="text-xs font-mono uppercase tracking-wider text-coal-muted mb-3">Concern</p>
+          <p className="text-sm text-coal leading-relaxed mb-4">{consultation.escalation.escalationReason}</p>
+          <div className="border-t border-border pt-4 space-y-2 text-xs text-coal-muted">
+            <p><span className="text-coal font-medium">Severity:</span> {consultation.escalation.severityAtEscalation}</p>
+            <p><span className="text-coal font-medium">Status:</span> {consultation.status}</p>
+            <p><span className="text-coal font-medium">Phone:</span> {consultation.escalation.patientPhone}</p>
           </div>
         </aside>
 
         {/* Middle: chat */}
-        <section className="xl:col-span-6 card-ink !p-0 flex flex-col h-[70vh]">
-          <div className="px-5 py-3 border-b border-mint-300/10 flex items-center justify-between">
-            <p className="text-sm font-medium">Live consultation</p>
+        <section className="xl:col-span-6 card !p-0 flex flex-col h-[70vh]">
+          <div className="px-5 py-3 border-b border-border flex items-center justify-between">
+            <p className="text-sm font-medium text-coal">Live consultation</p>
             <Badge tone={joined ? 'green' : 'neutral'} dot>{joined ? 'Connected' : 'Connecting'}</Badge>
           </div>
 
           <div ref={scrollRef} className="flex-1 overflow-y-auto px-5 py-4 space-y-3">
             {messages.length === 0 && (
-              <p className="text-center text-sm text-muted-fg py-6">No messages yet.</p>
+              <p className="text-center text-sm text-coal-muted py-6">No messages yet.</p>
             )}
             {messages.map((m) => {
               const mine = m.senderRole === 'doctor';
@@ -120,8 +120,8 @@ export default function Consultation() {
                   <div className={cn(
                     'max-w-[75%] px-4 py-2.5 text-sm leading-relaxed rounded-2xl',
                     mine
-                      ? 'bg-ember-500 text-white rounded-br-sm'
-                      : 'bg-ink-700 border border-mint-300/10 rounded-bl-sm',
+                      ? 'bg-sage-500 text-white rounded-br-sm'
+                      : 'bg-surface-muted border border-border text-coal rounded-bl-sm',
                   )}>
                     {m.content}
                   </div>
@@ -130,26 +130,26 @@ export default function Consultation() {
             })}
           </div>
 
-          <div className="px-3 py-3 border-t border-mint-300/10 flex items-end gap-2">
+          <div className="px-3 py-3 border-t border-border flex items-end gap-2">
             <textarea
               value={text}
               onChange={(e) => setText(e.target.value)}
               onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send(); } }}
               placeholder="Reply to patient…"
               rows={1}
-              className="input-ink resize-none text-sm py-3"
+              className="input-field resize-none text-sm py-3"
             />
             <button onClick={send} disabled={!text.trim()} className="btn-primary !p-3" aria-label="Send"><Send size={18} /></button>
           </div>
         </section>
 
         {/* Right: internal notes */}
-        <aside className="xl:col-span-3 card-ink flex flex-col">
+        <aside className="xl:col-span-3 card p-4 flex flex-col">
           <div className="flex items-center justify-between mb-3">
-            <p className="text-sm font-medium">Internal notes</p>
+            <p className="text-sm font-medium text-coal">Internal notes</p>
             <Badge tone="amber" dot>Doctor only</Badge>
           </div>
-          <p className="text-[11px] text-muted-fg mb-3">These are never visible to the patient.</p>
+          <p className="text-[11px] text-coal-muted mb-3">These are never visible to the patient.</p>
 
           <TextArea
             value={noteDraft}
@@ -160,11 +160,11 @@ export default function Consultation() {
           <Button size="sm" onClick={addNote} className="mt-2 self-start"><Plus size={14} /> Save note</Button>
 
           <div className="mt-4 space-y-2 overflow-y-auto max-h-[40vh]">
-            {notes.length === 0 && <p className="text-xs text-muted-fg">No notes yet.</p>}
+            {notes.length === 0 && <p className="text-xs text-coal-muted">No notes yet.</p>}
             {notes.map((n) => (
-              <div key={n.id} className="bg-ink-800 border border-mint-300/10 rounded-xl p-3 text-xs">
-                <p className="text-white leading-relaxed whitespace-pre-wrap">{n.content}</p>
-                <p className="text-[10px] text-muted-fg mt-2 font-mono">{new Date(n.createdAt).toLocaleString()}</p>
+              <div key={n.id} className="bg-surface-soft border border-border rounded-xl p-3 text-xs">
+                <p className="text-coal leading-relaxed whitespace-pre-wrap">{n.content}</p>
+                <p className="text-[10px] text-coal-muted mt-2 font-mono">{new Date(n.createdAt).toLocaleString()}</p>
               </div>
             ))}
           </div>

@@ -46,7 +46,13 @@ export default function EscalationConsent() {
         email: form.email || undefined,
         hospitalId: form.hospitalId,
         symptomSummary: summary
-          ? `${summary.chiefConcern}\n\nKey symptoms: ${(summary.keySymptoms || []).join(', ')}\nDuration: ${summary.duration}\nSelf-reported: ${summary.selfReported}\n\nAI note: ${summary.aiNote}`
+          ? [
+              summary.chiefConcern || 'Patient escalation',
+              `Key symptoms: ${(summary.keySymptoms || []).join(', ') || 'Not specified'}`,
+              `Duration: ${summary.duration || 'Not specified'}`,
+              `Self-reported: ${summary.selfReported || 'Nothing tried yet'}`,
+              summary.aiNote ? `AI note: ${summary.aiNote}` : null,
+            ].filter(Boolean).join('\n')
           : 'Patient requested consultation through Kira.',
         escalationReason: summary?.chiefConcern || 'Patient escalation from AI chat',
         severityAtEscalation: summary?.severityAtEscalation || severityLevel || 'amber',
@@ -64,34 +70,36 @@ export default function EscalationConsent() {
 
   return (
     <MobileFrame>
-      <header className="px-5 py-4 border-b border-mint-300/10 flex items-center justify-between">
-        <button onClick={() => navigate(-1)} className="text-muted-fg hover:text-white">
+      {/* Header */}
+      <header className="px-5 py-4 border-b border-border flex items-center justify-between">
+        <button onClick={() => navigate(-1)} className="text-coal-muted hover:text-coal transition">
           <ArrowLeft size={18} />
         </button>
-        <span className="font-display text-base">Connect a doctor</span>
+        <span className="font-display text-base text-coal">Connect a doctor</span>
         <span className="w-5" />
       </header>
 
       <div className="flex-1 overflow-y-auto px-6 py-6">
         {step === 'explain' && (
           <>
-            <div className="card-ink mb-5">
+            {/* Privacy notice card */}
+            <div className="card mb-5 p-4">
               <div className="flex items-start gap-3">
-                <ShieldCheck className="text-mint-300 flex-shrink-0 mt-0.5" size={18} />
+                <ShieldCheck className="text-sage-500 flex-shrink-0 mt-0.5" size={18} />
                 <div>
-                  <p className="text-sm font-medium text-white">Your AI chat stays private</p>
-                  <p className="text-xs text-muted-fg mt-1 leading-relaxed">
+                  <p className="text-sm font-medium text-coal">Your AI chat stays private</p>
+                  <p className="text-xs text-coal-muted mt-1 leading-relaxed">
                     To speak with a doctor we need a few basic details. The doctor only sees a brief medical summary — never the chat itself.
                   </p>
                 </div>
               </div>
             </div>
 
-            <h3 className="font-display text-xl text-white mb-3">What doctors receive</h3>
+            <h3 className="font-display text-xl text-coal mb-3">What doctors receive</h3>
             <ul className="space-y-2 mb-8">
               {['Your first name', 'Your age', 'A phone number to reach you', 'AI-generated summary of your concern', 'Your chosen hospital'].map((x) => (
-                <li key={x} className="flex items-center gap-2 text-sm text-muted-fg">
-                  <span className="w-1.5 h-1.5 rounded-full bg-mint-300" />
+                <li key={x} className="flex items-center gap-2 text-sm text-coal-muted">
+                  <span className="w-1.5 h-1.5 rounded-full bg-sage-400 flex-shrink-0" />
                   {x}
                 </li>
               ))}
@@ -106,8 +114,8 @@ export default function EscalationConsent() {
 
         {(step === 'form' || step === 'submitting') && (
           <form onSubmit={submit} className="space-y-4">
-            <h3 className="font-display text-xl text-white mb-1">A few details</h3>
-            <p className="text-sm text-muted-fg mb-3">Doctors need a way to reach you.</p>
+            <h3 className="font-display text-xl text-coal mb-1">A few details</h3>
+            <p className="text-sm text-coal-muted mb-3">Doctors need a way to reach you.</p>
 
             <Input label="First name" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} required />
             <Input label="Age" type="number" min={13} value={form.age} onChange={(e) => setForm({ ...form, age: e.target.value })} required />

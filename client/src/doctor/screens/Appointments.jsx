@@ -32,8 +32,8 @@ export default function Appointments() {
   return (
     <div className="space-y-6 max-w-4xl">
       <div>
-        <h1 className="font-display text-3xl text-white mb-1">Appointments</h1>
-        <p className="text-sm text-muted-fg">All scheduled consultations at your hospital.</p>
+        <h1 className="font-display text-3xl text-coal mb-1">Appointments</h1>
+        <p className="text-sm text-coal-muted">All scheduled consultations at your hospital.</p>
       </div>
 
       {appointments.length === 0 && (
@@ -42,26 +42,26 @@ export default function Appointments() {
 
       {Object.entries(groups).map(([day, list]) => (
         <section key={day}>
-          <h2 className="font-display text-lg mb-3 text-white">{day}</h2>
+          <h2 className="font-display text-lg text-coal mb-3">{day}</h2>
           <div className="space-y-2">
             {list.map((a) => (
-              <div key={a.id} className="card-ink !p-4 flex items-center gap-4">
+              <div key={a.id} className="card !p-4 flex items-center gap-4">
                 <div className="w-14 text-center">
-                  <p className="text-[11px] font-mono uppercase text-muted-fg">
+                  <p className="text-[11px] font-mono uppercase text-coal-muted">
                     {new Date(a.scheduledAt).toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' })}
                   </p>
-                  <p className="text-[10px] text-mint-200 mt-0.5 uppercase font-mono">{a.type}</p>
+                  <p className="text-[10px] text-coal-muted mt-0.5 uppercase font-mono">{a.type}</p>
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-white truncate">{a.escalation?.patientName || 'Patient'}</p>
-                  <p className="text-xs text-muted-fg truncate">{a.doctor?.fullName} · {a.doctor?.specialty}</p>
+                  <p className="text-sm font-medium text-coal truncate">{a.escalation?.patientName || 'Patient'}</p>
+                  <p className="text-xs text-coal-muted truncate">{a.doctor?.fullName} · {a.doctor?.specialty}</p>
                 </div>
                 <Badge tone={
                   a.status === 'completed' ? 'green' :
                   a.status === 'cancelled' ? 'neutral' : 'mint'
                 } dot>{a.status}</Badge>
                 {a.escalation?.patientPhone && (
-                  <a href={`tel:${a.escalation.patientPhone}`} className="text-muted-fg hover:text-mint-300 transition" title={a.escalation.patientPhone}>
+                  <a href={`tel:${a.escalation.patientPhone}`} className="text-coal-muted hover:text-coal transition" title={a.escalation.patientPhone}>
                     <Phone size={14} />
                   </a>
                 )}
