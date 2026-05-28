@@ -117,6 +117,36 @@ router.get('/:id', requireDoctor, async (req, res, next) => {
   } catch (err) { next(err); }
 });
 
+// PATIENT: poll their own escalation for consultation + appointment status.
+// Uses sessionToken query param — no doctor JWT required.
+router.get('/:id/patient-status', async (req, res, next) => {
+  try {
+    const { sessionToken } = req.query;
+    if (!sessionToken) throw new HttpError(401, 'Session token required');
+
+    const session = await prisma.anonymousSession.findUnique({
+      where: { sessionToken },
+      include: { escalation: { select: { id: true } } },
+    });
+    if (!session) throw new HttpError(401, 'Invalid session');
+    if (session.escalation?.id !== req.params.id) throw new HttpError(403, 'Access denied');
+
+    const escalation = await prisma.escalation.findUnique({
+      where: { id: req.params.id },
+      select: {
+        id: true,
+        status: true,
+        hospital: { select: { id: true, name: true } },
+        consultation: { select: { id: true, status: true } },
+        appointment: { select: { id: true, scheduledAt: true, type: true, status: true } },
+      },
+    });
+    if (!escalation) throw new HttpError(404, 'Escalation not found');
+
+    res.json({ escalation });
+  } catch (err) { next(err); }
+});
+
 const patchSchema = z.object({
   status: z.enum(['pending', 'assigned', 'active', 'follow_up', 'closed']).optional(),
   assignedDoctorId: z.string().uuid().optional().nullable(),
