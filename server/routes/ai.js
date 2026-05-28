@@ -102,20 +102,18 @@ router.post('/chat', aiRateLimit, requireSession, async (req, res, next) => {
     req.on('close', () => { aborted = true; });
 
     try {
-      const stream = chatReplyStream({
+      const stream = await chatReplyStream({
         message,
         history: history.slice(0, -1), // exclude the user msg we just added (already in `message`)
         language: session.language,
       });
 
-      for await (const event of stream) {
+      for await (const chunk of stream) {
         if (aborted) break;
-        if (event.type === 'content_block_delta' && event.delta?.type === 'text_delta') {
-          const text = event.delta.text;
-          if (text) {
-            fullText += text;
-            sendEvent('delta', { text });
-          }
+        const text = chunk.choices[0]?.delta?.content || '';
+        if (text) {
+          fullText += text;
+          sendEvent('delta', { text });
         }
       }
     } catch (streamErr) {

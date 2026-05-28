@@ -1,17 +1,16 @@
-import Anthropic from '@anthropic-ai/sdk';
+import Groq from 'groq-sdk';
 import { logger } from '../utils/logger.js';
 
-const MODEL_CHAT       = 'claude-sonnet-4-5';   // main chat + summary
-const MODEL_VISION     = 'claude-sonnet-4-5';   // image analysis
-const MODEL_CLASSIFIER = 'claude-haiku-4-5';    // fast silent classifier
+const MODEL_CHAT       = 'llama-3.3-70b-versatile';  // main chat + summary
+const MODEL_CLASSIFIER = 'llama-3.1-8b-instant';      // fast silent classifier
 
 let client = null;
 function getClient() {
   if (!client) {
-    if (!process.env.ANTHROPIC_API_KEY) {
-      throw new Error('ANTHROPIC_API_KEY is not set');
+    if (!process.env.GROQ_API_KEY) {
+      throw new Error('GROQ_API_KEY is not set');
     }
-    client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
+    client = new Groq({ apiKey: process.env.GROQ_API_KEY });
   }
   return client;
 }
@@ -158,28 +157,6 @@ Rules:
 - careBadgeText must match severity: green→"Handle at home", amber→"Consider seeing a doctor" or "See a doctor today", red→"This needs urgent attention".
 - policyViolation is true only for clearly abusive/explicit language not related to a genuine health question.`;
 
-const SYSTEM_VISION = `You are a medical image analysis assistant for Kira Initiative.
-You may ONLY analyse images showing: face, neck, eyes, or mouth.
-
-If the image shows anything else — including genitals, torso, limbs, or any private body part — respond ONLY with:
-{ "approved": false, "reason": "Image outside permitted scan areas" }
-
-For approved images, respond with valid JSON:
-{
-  "approved": true,
-  "bodyArea": "face" | "neck" | "eyes" | "mouth",
-  "observations": "Plain-language description of visible findings. Be factual and calm.",
-  "possibleCauses": "2–3 possible causes in plain language",
-  "severity": "green" | "amber" | "red",
-  "careBadgeText": "Handle at home" | "Consider seeing a doctor" | "See a doctor today" | "This needs urgent attention",
-  "recommendation": "Single clear next step for the patient"
-}
-
-Rules:
-- NEVER diagnose. Use: "may suggest", "could indicate", "consistent with".
-- No alarming language. Calm, factual observations only.
-- Return ONLY the JSON object. No markdown fences, no preamble.`;
-
 const SYSTEM_SUMMARY = `You are generating a confidential clinical handoff summary for a doctor at a Rwandan hospital. Based on the conversation, write a structured anonymous summary.
 
 IMPORTANT:
@@ -213,60 +190,52 @@ function parseJsonResponse(text) {
   return JSON.parse(s.slice(first, last + 1));
 }
 
-function asAnthropicMessages(history) {
-  return (history || []).map((m) => ({
-    role: m.role === 'assistant' ? 'assistant' : 'user',
-    content: String(m.content || ''),
-  }));
-}
-
-// Detect Anthropic billing/credit errors so callers can send graceful fallbacks.
-export function isAnthropicBillingError(err) {
-  if (!err) return false;
-  const msg = String(err?.message || err?.error?.error?.message || '').toLowerCase();
-  return msg.includes('credit') || msg.includes('billing') || msg.includes('balance') || err?.status === 402;
-}
-
-// Detect any Anthropic API-level error (vs a network/code error).
-export function isAnthropicApiError(err) {
-  return !!(err?.status || err?.error?.type === 'error');
-}
-
-// ─────────────────────────────────────────
-// CALL 1 — CHAT
-// ─────────────────────────────────────────
-
-function buildChatRequest({ message, history = [], language = 'en' }) {
-  const messages = [
-    ...asAnthropicMessages(history),
-    { role: 'user', content: String(message || '') },
+function buildMessages(systemPrompt, history = [], userMessage, language = 'en') {
+  const langInstruction = language === 'rw' ? 'Reply in: Kinyarwanda.' : 'Reply in: English.';
+  return [
+    { role: 'system', content: `${systemPrompt}\n\n${langInstruction}` },
+    ...(history || []).map((m) => ({
+      role: m.role === 'assistant' ? 'assistant' : 'user',
+      content: String(m.content || ''),
+    })),
+    { role: 'user', content: String(userMessage || '') },
   ];
-  return {
-    model: MODEL_CHAT,
-    max_tokens: 600,
-    system: [
-      { type: 'text', text: SYSTEM_CHAT, cache_control: { type: 'ephemeral' } },
-      { type: 'text', text: `Reply in: ${language === 'rw' ? 'Kinyarwanda' : 'English'}.` },
-    ],
-    messages,
-  };
 }
+
+// Detect Groq rate-limit errors so callers can send graceful fallbacks.
+export function isGroqRateLimitError(err) {
+  if (!err) return false;
+  const msg = String(err?.message || '').toLowerCase();
+  return err?.status === 429 || msg.includes('rate limit') || msg.includes('quota');
+}
+
+// Backward-compatible alias used by ai.js
+export const isAnthropicBillingError = isGroqRateLimitError;
+
+// ─────────────────────────────────────────
+// CALL 1 — CHAT (non-streaming)
+// ─────────────────────────────────────────
 
 export async function chatReply({ message, history = [], language = 'en' }) {
   const c = getClient();
-  const response = await c.messages.create(buildChatRequest({ message, history, language }));
-  const text = response.content
-    .filter((block) => block.type === 'text')
-    .map((block) => block.text)
-    .join('\n')
-    .trim();
-  return { text, usage: response.usage };
+  const response = await c.chat.completions.create({
+    model: MODEL_CHAT,
+    max_tokens: 600,
+    messages: buildMessages(SYSTEM_CHAT, history, message, language),
+  });
+  const text = response.choices[0]?.message?.content?.trim() || '';
+  return { text };
 }
 
-// Streaming variant — returns the Anthropic stream object, which is async-iterable.
-export function chatReplyStream({ message, history = [], language = 'en' }) {
+// Streaming variant — returns an async-iterable Groq stream.
+export async function chatReplyStream({ message, history = [], language = 'en' }) {
   const c = getClient();
-  return c.messages.stream(buildChatRequest({ message, history, language }));
+  return c.chat.completions.create({
+    model: MODEL_CHAT,
+    max_tokens: 600,
+    messages: buildMessages(SYSTEM_CHAT, history, message, language),
+    stream: true,
+  });
 }
 
 // ─────────────────────────────────────────
@@ -279,18 +248,20 @@ export async function classifyConversation({ history = [] }) {
     .map((m) => `${m.role === 'assistant' ? 'Kira' : 'User'}: ${m.content}`)
     .join('\n');
 
-  const response = await c.messages.create({
+  const response = await c.chat.completions.create({
     model: MODEL_CLASSIFIER,
     max_tokens: 300,
-    system: SYSTEM_CLASSIFIER,
-    messages: [{ role: 'user', content: `Conversation transcript:\n\n${transcript}\n\nReturn the JSON classification.` }],
+    messages: [
+      { role: 'system', content: SYSTEM_CLASSIFIER },
+      { role: 'user', content: `Conversation transcript:\n\n${transcript}\n\nReturn the JSON classification.` },
+    ],
+    response_format: { type: 'json_object' },
   });
 
-  const text = response.content.filter((b) => b.type === 'text').map((b) => b.text).join('').trim();
+  const text = response.choices[0]?.message?.content?.trim() || '';
 
   try {
     const parsed = parseJsonResponse(text);
-    // Enforce: triggerDoctor follows severity.
     if (parsed.severity === 'amber' || parsed.severity === 'red') {
       parsed.triggerDoctor = true;
     }
@@ -300,7 +271,7 @@ export async function classifyConversation({ history = [] }) {
     return {
       topic: 'general',
       severity: 'green',
-      isSexualHealth: false,
+      isSexualHealth: true,
       triggerDoctor: false,
       careBadgeText: 'Handle at home',
       policyViolation: false,
@@ -310,41 +281,12 @@ export async function classifyConversation({ history = [] }) {
 }
 
 // ─────────────────────────────────────────
-// CALL 3 — VISION SCAN
+// CALL 3 — VISION SCAN (not supported with Groq)
 // ─────────────────────────────────────────
 
 export async function analyseScanImage({ imageBase64, mediaType = 'image/jpeg', chatContext = '' }) {
-  const c = getClient();
-
-  const response = await c.messages.create({
-    model: MODEL_VISION,
-    max_tokens: 600,
-    system: SYSTEM_VISION,
-    messages: [{
-      role: 'user',
-      content: [
-        {
-          type: 'image',
-          source: { type: 'base64', media_type: mediaType, data: imageBase64 },
-        },
-        {
-          type: 'text',
-          text: chatContext
-            ? `Context from earlier chat: ${chatContext}\n\nAnalyse the image and return the JSON.`
-            : 'Analyse the image and return the JSON.',
-        },
-      ],
-    }],
-  });
-
-  const text = response.content.filter((b) => b.type === 'text').map((b) => b.text).join('').trim();
-
-  try {
-    return parseJsonResponse(text);
-  } catch (err) {
-    logger.warn('vision returned non-JSON, returning rejection', text);
-    return { approved: false, reason: 'Could not analyse image safely' };
-  }
+  // Vision/image analysis is not available with Groq text models.
+  return { approved: false, reason: 'Image scan is not available on this platform.' };
 }
 
 // ─────────────────────────────────────────
@@ -357,17 +299,20 @@ export async function summariseForDoctor({ history = [], language = 'en' }) {
     .map((m) => `${m.role === 'assistant' ? 'Kira' : 'User'}: ${m.content}`)
     .join('\n');
 
-  const response = await c.messages.create({
+  const response = await c.chat.completions.create({
     model: MODEL_CHAT,
     max_tokens: 500,
-    system: SYSTEM_SUMMARY,
-    messages: [{
-      role: 'user',
-      content: `Patient language: ${language}\n\nConversation:\n${transcript}\n\nReturn the JSON summary.`,
-    }],
+    messages: [
+      { role: 'system', content: SYSTEM_SUMMARY },
+      {
+        role: 'user',
+        content: `Patient language: ${language}\n\nConversation:\n${transcript}\n\nReturn the JSON summary.`,
+      },
+    ],
+    response_format: { type: 'json_object' },
   });
 
-  const text = response.content.filter((b) => b.type === 'text').map((b) => b.text).join('').trim();
+  const text = response.choices[0]?.message?.content?.trim() || '';
 
   try {
     return parseJsonResponse(text);

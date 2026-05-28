@@ -18,7 +18,7 @@
     "seed": "node prisma/seed.js"
   },
   "dependencies": {
-    "@anthropic-ai/sdk": "^0.32.1",
+    "groq-sdk": "^0.7.0",
     "@prisma/client": "^5.22.0",
     "@supabase/supabase-js": "^2.106.2",
     "bcryptjs": "^2.4.3",
